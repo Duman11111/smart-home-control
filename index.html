@@ -83,7 +83,34 @@ main{background:radial-gradient(ellipse at 88% 0%,var(--halo,#37281d),transparen
 #plan-details{width:min(530px,calc(100% - 30px));background:#282019;color:var(--text);border:1px solid #96754f;border-radius:24px;padding:24px;box-shadow:0 20px 80px #0009}#plan-details::backdrop{background:#15110ccb;backdrop-filter:blur(5px)}.detail-title{display:flex;align-items:start;justify-content:space-between;gap:10px}#plan-details h2{font:500 2.8rem Georgia,serif;margin:0 0 14px}#plan-details[data-tier=Premium]{background:#292239;border-color:#a897c8}.request-list{display:grid;gap:12px}.request-list article{overflow-wrap:anywhere}.request-list time{color:var(--muted);font-size:.87rem}.request-list .request-message{white-space:pre-wrap;margin-top:8px}.request-list .request-status{color:var(--green);margin-top:8px}
 </style><style>
 .iot{margin:16px 0;padding:19px;border:1px solid var(--line);background:#231c16;border-radius:19px}.iot h3{margin-bottom:10px}.sensor-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:12px 0}.sensor-grid label{display:grid;gap:5px;color:var(--muted)}.iot svg{width:100%;height:145px;display:block;margin:8px 0}.iot-history{max-height:230px;overflow:auto}.iot-history table{width:100%;border-collapse:collapse;text-align:left;white-space:nowrap}.iot-history td,.iot-history th{padding:7px;border-bottom:1px solid var(--line)}.iot-alert{color:#ffd397;margin:10px 0}.device.active .ico{animation:iot-pulse 2.2s ease-in-out infinite}@keyframes iot-pulse{50%{filter:drop-shadow(0 0 6px #e9bd87aa)}}
-</style></head>
+</style><style>
+#power-times{gap:8px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+#power-times:has(:only-child){justify-content:center}
+.power-range{font-size:.84rem;margin:8px 0 0}
+#iot-monitor label:has(>#iot-auto){display:inline-flex;align-items:center;gap:9px;margin:12px 0 4px}
+#iot-monitor #iot-auto{width:1.12rem;height:1.12rem;accent-color:#efbf85;margin:0}
+</style><style>
+#chat-launch,#chat-panel{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:12}
+#chat-launch{display:flex;align-items:center;gap:9px;padding:12px 17px;background:linear-gradient(130deg,#f5cd97,#dba76b);color:#281b10;border:1px solid #f8dab1;border-radius:24px;box-shadow:0 6px 28px #110a0670;font-weight:700}
+#chat-launch svg{width:21px;height:21px}
+#chat-panel{width:min(380px,calc(100vw - 32px));height:min(475px,calc(100vh - 35px));height:min(475px,calc(100dvh - 35px));display:flex;flex-direction:column;background:#241e18f5;backdrop-filter:blur(20px);color:#fff3e3;border:1px solid #8a7054;border-radius:22px;box-shadow:0 16px 70px #0c0804ad;overflow:hidden}
+#chat-panel[hidden],#chat-launch[hidden]{display:none}
+.chat-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 18px;background:linear-gradient(120deg,#483425,#2b231d);border-bottom:1px solid #594532}
+.chat-head h2{font:500 1.6rem/1.2 Georgia,serif;letter-spacing:-.025em}.chat-head p{font-size:.85rem;color:#e3ceb3}
+.chat-close{border:0;background:#ffffff0e;color:#ffe7ca;border-radius:50%;width:38px;height:38px;font-size:1.5rem;line-height:1}
+#chat-log{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:16px;display:flex;flex-direction:column;align-items:flex-start;gap:10px}
+.chat-message{white-space:pre-line;overflow-wrap:anywhere;max-width:94%;padding:9px 12px;border-radius:14px 14px 14px 3px;background:#3a3027;color:#f2e4d3;font-size:.93rem;line-height:1.45;flex:none}
+.chat-message.user{align-self:flex-end;border-radius:14px 14px 3px 14px;background:#5e422b;color:#fff1de}
+.chat-prompts{display:flex;gap:7px;padding:6px 14px}
+.chat-prompts button{background:transparent;border:1px solid #6b533c;color:#edcda6;font-size:.82rem;border-radius:20px;padding:5px 10px}
+#chat-form{display:flex;gap:7px;padding:8px 14px 14px}
+#chat-form input{min-width:0;flex:1;font-size:1rem}
+#chat-form button{border:0;border-radius:10px;background:#edbd81;color:#23170e;padding:8px 12px;font-weight:700}
+footer{padding-bottom:78px}
+@media(max-width:480px){#chat-launch{padding:10px 14px}.chat-head{padding:12px 14px}}
+
+</style>
+</head>
 <body>
 <header><div class="wrap nav">
 <a class="brand" href="#home"><i data-icon="home"></i><span>Smart Home <span>Control</span></span></a>
@@ -125,10 +152,10 @@ main{background:radial-gradient(ellipse at 88% 0%,var(--halo,#37281d),transparen
     <button type="button" data-quick="curtain" aria-label="Перде"><span data-icon="curtain"></span><span id="quick-curtain"></span></button>
   </div></div>
 </div>
-<div class="metrics"><div class="metric"><span>Температура</span><strong id="temperature"></strong></div><div class="metric"><span>Ылғалдылық</span><strong id="humidity"></strong></div><div class="metric"><span>Энергия</span><strong id="energy"></strong></div></div>
-<div class="dash-grid"><div class="devices"></div><aside><div class="chart"><div class="chart-head"><h3>Энергия шығыны</h3><span>Бүгін</span></div>
-<svg viewBox="0 0 260 105" role="img" aria-label="Күн ішіндегі демо энергия шығыны"><defs><linearGradient id="fill" x2="0" y2="1"><stop stop-color="#eaba82" stop-opacity=".43"/><stop offset="1" stop-color="#eaba82" stop-opacity="0"/></linearGradient></defs><path d="M0 25H260M0 55H260M0 85H260" stroke="#273953"/><path id="chart-fill" fill="url(#fill)"/><path id="chart-line" fill="none" stroke="#edbb80" stroke-width="2.5" stroke-linejoin="round"/></svg>
-<div class="chart-labels"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span></div></div><div class="chart"><h3>Үй жоспары</h3><div class="floor" aria-label="Картадан бөлме таңдау"></div></div></aside></div></div>
+<div class="metrics"><div class="metric"><span>Температура</span><strong id="temperature"></strong></div><div class="metric"><span>Ылғалдылық</span><strong id="humidity"></strong></div><div class="metric"><span>Қуат</span><strong id="energy"></strong></div></div>
+<div class="dash-grid"><div class="devices"></div><aside><div class="chart"><div class="chart-head"><h3>Қуат тарихы</h3><span id="power-samples"></span></div>
+<svg viewBox="0 0 260 105" role="img" aria-label="Бөлменің соңғы қуат өлшемдері, кВт"><defs><linearGradient id="fill" x2="0" y2="1"><stop stop-color="#eaba82" stop-opacity=".43"/><stop offset="1" stop-color="#eaba82" stop-opacity="0"/></linearGradient></defs><path d="M0 25H260M0 55H260M0 85H260" stroke="#273953"/><path id="chart-fill" fill="url(#fill)"/><path id="chart-line" fill="none" stroke="#edbb80" stroke-width="2.5" stroke-linejoin="round"/><circle id="power-last" r="3.5" fill="#ffe5be" visibility="hidden"/></svg>
+<div class="chart-labels" id="power-times"></div><p id="power-range" class="power-range"></p></div><div class="chart"><h3>Үй жоспары</h3><div class="floor" aria-label="Картадан бөлме таңдау"></div></div></aside></div></div>
 <div class="iot" id="iot-monitor">
 <h3>Виртуалды датчиктер және мониторинг</h3><p>Мәндерді таңдалған бөлме үшін өзгертіңіз.</p>
 <form id="sensor-form"><div class="sensor-grid">
@@ -178,6 +205,22 @@ main{background:radial-gradient(ellipse at 88% 0%,var(--halo,#37281d),transparen
 </form></div></section>
 <section class="block wrap" id="requests"><div class="section-head"><span class="eyebrow">Өтінімдер</span><h2>Тарифке берген өтінімдерім</h2><p>Осы браузерде сақталған өтінімдер тізімі.</p></div><div class="request-list"></div><div class="actions"><a class="btn primary" href="#pricing">Тарифтерді қарау</a></div></section>
 </main>
+<button id="chat-launch" type="button" aria-controls="chat-panel" aria-expanded="false">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20 11.6a8 8 0 0 1-8 8H8l-4 2 .8-4.1A8 8 0 1 1 20 11.6Z"/><path d="M8 10h8m-8 4h5"/></svg>
+  <span>Үй көмекшісі</span>
+</button>
+<aside id="chat-panel" aria-labelledby="chat-title" hidden>
+  <div class="chat-head">
+    <div><h2 id="chat-title">Үй көмекшісі</h2><p>Таңдалған бөлме · <span id="chat-room"></span></p></div>
+    <button class="chat-close" type="button" aria-label="Чатты жабу">×</button>
+  </div>
+  <div id="chat-log" role="log" aria-live="polite" aria-label="Хабарламалар" aria-relevant="additions" tabindex="0">
+    <p class="chat-message">Сәлем! Демо үйді осы жерден басқара аласыз. Мысалы, «Асханадағы шамды қос» деп жазыңыз.</p>
+  </div>
+  <div class="chat-prompts" aria-label="Дайын сұраулар"><button type="button">Бөлме күйі</button><button type="button">Тарифтер</button><button type="button">Көмек</button></div>
+  <form id="chat-form"><input id="chat-input" autocomplete="off" aria-label="Көмекшіге хабарлама" placeholder="Сұрақ немесе команда…" maxlength="240" required><button type="submit">Жіберу</button></form>
+</aside>
+
 <dialog id="plan-details" aria-labelledby="detail-name"><div class="detail-title"><h2 id="detail-name"></h2><form method="dialog"><button class="btn" aria-label="Жабу">Жабу</button></form></div><p id="detail-description"></p><ul id="detail-benefits"></ul><a class="btn primary" id="detail-apply" href="#contact">Өтінім беру</a></dialog>
 <footer><div class="wrap"><a class="brand" href="#home"><i data-icon="home"></i><span>Smart Home <span>Control</span></span></a><span>© 2026 Smart Home Control · Демо жоба</span><a href="#faq">Жиі қойылатын сұрақтар</a></div></footer>
 <script>
@@ -288,7 +331,10 @@ function renderHistory(){
   const points=values.map((v,i)=>[(i/Math.max(values.length-1,1))*500,max===min?65:110-90*(v-min)/(max-min)].join(','));
   if(points.length===1)points.push('500,65');
   document.querySelector('#iot-chart').setAttribute('points',points.join(' '));
-  document.querySelector('#iot-scale').textContent=values.length?'Ең аз '+min+' · Ең көп '+max:'Әзірге жазба жоқ';
+  const unit={air:'°C',humidity:'%',lux:'лк',power:'кВт'}[key];
+  document.querySelector('#iot-scale').textContent=values.length
+    ? 'Ең аз '+format.format(min)+' '+unit+' · Ең көп '+format.format(max)+' '+unit
+    : 'Әзірге жазба жоқ';
   const rows=[...records].reverse().map(record=>{
     const tr=document.createElement('tr');
     for(const value of [new Date(record.at).toLocaleTimeString('kk-KZ'),record.air,record.humidity,record.lux,record.power,record.action]){
@@ -402,6 +448,50 @@ quickButtons.forEach(button => button.addEventListener('click', () => {
   renderDevices();
 }));
 
+function renderPowerHistory(records) {
+  const labels = document.querySelector('#power-times');
+  const count = records.length;
+  const marker = document.querySelector('#power-last');
+  labels.replaceChildren();
+  document.querySelector('#power-samples').textContent = count ? count+' өлшем' : '';
+  marker.setAttribute('visibility', count ? 'visible' : 'hidden');
+  if (!count) {
+    document.querySelector('#chart-line').setAttribute('d','');
+    document.querySelector('#chart-fill').setAttribute('d','');
+    document.querySelector('#power-range').textContent = 'Әзірге қуат өлшемі жоқ';
+    return;
+  }
+
+  const times = records.map(record => Date.parse(record.at));
+  const start = Math.min(...times);
+  const end = Math.max(...times);
+  const powers = records.map(record => record.power);
+  const peak = Math.max(...powers);
+  const coordinates = records.map((record, index) => {
+    const x = end === start ? 130 : 4 + 252*(times[index]-start)/(end-start);
+    const y = 96 - 86*record.power/Math.max(peak, 0.01);
+    return [x,y];
+  });
+  const line = 'M'+coordinates.map(point => point.join(' ')).join('L');
+  const last = coordinates[count-1];
+  document.querySelector('#chart-line').setAttribute('d',line);
+  document.querySelector('#chart-fill').setAttribute('d',count>1 ? line+'L'+last[0]+' 105L'+coordinates[0][0]+' 105Z' : '');
+  marker.setAttribute('cx',last[0]);
+  marker.setAttribute('cy',last[1]);
+  const includeDate = new Date(start).toDateString() !== new Date(end).toDateString();
+  const clock = new Intl.DateTimeFormat('kk-KZ', {
+    ...(includeDate ? {month:'2-digit',day:'2-digit'} : {}),
+    hour:'2-digit',minute:'2-digit',second:'2-digit'
+  });
+  for (const time of new Set([start,end])) {
+    const label = document.createElement('time');
+    label.dateTime = new Date(time).toISOString();
+    label.textContent = clock.format(time);
+    labels.append(label);
+  }
+  document.querySelector('#power-range').textContent = 'Ең жоғары қуат: '+format.format(peak)+' кВт';
+}
+
 function readouts() {
   const room = roomStates[selectedRoom];
   document.querySelector('#room-name').textContent=rooms[selectedRoom];
@@ -417,13 +507,7 @@ function readouts() {
   document.querySelector('#temperature').textContent = temperature + ' °C';
   document.querySelector('#humidity').textContent = room.humidity + '%';
   document.querySelector('#energy').textContent = format.format(watts) + ' кВт';
-  const observed=history[selectedRoom].slice(-10).map(record=>record.power);
-  if(!observed.length)observed.push(watts);
-  if(observed.length===1)observed.push(observed[0]);
-  const points=observed.map((value,index)=>(index*260/(observed.length-1)).toFixed(1)+' '+Math.max(8,95-value*37));
-  const line = 'M'+points.join('L');
-  document.querySelector('#chart-line').setAttribute('d',line);
-  document.querySelector('#chart-fill').setAttribute('d',line+'L260 105H0Z');
+  renderPowerHistory(history[selectedRoom].slice(-10));
   updateMonitor();
 }
 
@@ -446,6 +530,7 @@ function renderDevices() {
 
 function selectRoom(index,moveFocus=false) {
   selectedRoom=index;
+  document.querySelector('#chat-room').textContent=rooms[index];
   showRoomPhoto(index);
   [...tabs.children].forEach((button,i) => {
     button.setAttribute('aria-selected',i===index);
@@ -697,6 +782,166 @@ if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: re
     observer.observe(element);
   });
 }
+// The assistant recognizes complete commands so an unrecognized qualifier cannot trigger an action.
+const chatRoomEndings = '(?:де|да|ге|ға|дегі|дағы|нің|ның|ні|ны)?';
+const chatRoomPatterns = [
+  new RegExp('қонақ бөлме(?:сі)?'+chatRoomEndings+'|қонақ бөлмесінде(?:гі)?|(?:в )?гостин(?:ая|ой|ую)','gu'),
+  new RegExp('(?:ұйықтайтын|жатын) бөлме(?:сі)?'+chatRoomEndings+'|(?:ұйықтайтын|жатын) бөлмесінде(?:гі)?|(?:в )?спальн(?:я|е|ю|и)','gu'),
+  /асхана(?:да|ға|дағы|ның|ны)?|ас үй(?:де|ге|дегі|дің|ді)?|(?:на |в )?кухн(?:я|е|ю|и)/gu,
+  /ауыз үй(?:де|ге|дегі|дің|ді)?|кіреберіс(?:те|ке|тегі|тің|ті)?|(?:в )?прихож(?:ая|ей|ую)/gu
+];
+
+const chatDeviceNames = {
+  light: /^(?:шам(?:ды)?|жарық(?:ты)?|жарығын|шамын|ламп(?:а|у|ы)|свет|освещение)$/u,
+  ac: /^(?:кондиционер(?:ді)?|салқындатқыш(?:ты)?|кондиционерін)$/u,
+  heater: /^(?:жылытқыш(?:ты)?|обогреватель|отопление)$/u,
+  camera: /^(?:камера(?:ны|сын)?|камеру)$/u,
+  socket: /^(?:розетка(?:ны|сын)?|розетку)$/u,
+  curtain: /^(?:перде(?:ні|лерді|сін)?|штор(?:ы|у|а)|занавески)$/u,
+  lock: /^(?:есік(?:ті)?|есік құлп(?:ы|ын)|құлып(?:ты)?|дверь|дверной замок|замок)$/u
+};
+
+const chatActions = [
+  { pattern:/^(?:қос|қосшы|қосыңыз|жақ|жағыңыз|жақшы|включи|включите|включить)$/u, type:'power', value:true },
+  { pattern:/^(?:өшір|өшірші|өшіріңіз|сөндір|сөндірші|сөндіріңіз|выключи|выключите|выключить|отключи)$/u, type:'power', value:false },
+  { pattern:/^(?:аш|ашшы|ашыңыз|открой|откройте|открыть)$/u, type:'open', value:true },
+  { pattern:/^(?:жап|жапшы|жабыңыз|закрой|закройте|закрыть)$/u, type:'open', value:false },
+  { pattern:/^(?:құлыпта|құлыпташы|құлыптаңыз|запри|заблокируй)$/u, type:'lock', value:true },
+  { pattern:/^(?:құлыптан шығар|отопри|разблокируй)$/u, type:'lock', value:false }
+];
+
+function parseChat(text, currentRoom) {
+  const fallbackRoom = Number.isInteger(currentRoom) && currentRoom >= 0 && currentRoom < 4 ? currentRoom : 0;
+  const unknown = { kind:'unknown', room:fallbackRoom };
+  if (typeof text !== 'string' || text.length > 240) return unknown;
+  let command = text.normalize('NFKC').toLowerCase().replace(/ё/g,'е').trim().replace(/\s+/gu,' ');
+  const question = command.endsWith('?');
+  command = command.replace(/[.!?]+$/u,'').trim();
+  command = command.replace(/^(?:өтінемін|пожалуйста)[, ]+/u,'').replace(/[, ]+(?:өтінемін|пожалуйста)$/u,'');
+  if (/^(?:көмек|көмектес|не істей аласың|қандай (?:командалар|пәрмендер) бар|командалар|пәрмендер|сәлем|сәлеметсіз бе|привет|здравствуйте|помощь|команды|что ты умеешь)$/u.test(command)) {
+    return { kind:'help', room:fallbackRoom };
+  }
+  if (!question) {
+    const sceneCommand = command.replace(/^(?:іске қос|включи|включить|запусти) /u,'')
+      .replace(/ (?:(?:режимін|сценарийін) )?(?:іске қос|қос|қосшы|қосыңыз)$/u,'')
+      .replace(/[«»"]/gu,'');
+    const scenesByName = {
+      movie:['кино','кино режимі','режим кино'],
+      night:['түнгі режим','түнгі режимді','ночной режим'],
+      away:['үйден шығу','ухожу из дома','уход из дома']
+    };
+    for (const [scene,names] of Object.entries(scenesByName)) {
+      if (names.includes(sceneCommand)) return { kind:'scene', room:fallbackRoom, scene };
+    }
+  }
+
+  const matches = [];
+  for (const [index,pattern] of chatRoomPatterns.entries()) {
+    const bounded = new RegExp('(^| )('+pattern.source+')(?= |$)','gu');
+    command = command.replace(bounded,(_,space)=>{
+      matches.push(index);
+      return space;
+    });
+  }
+  if (matches.length > 1) return unknown;
+  const room = matches[0] ?? fallbackRoom;
+  command = command.trim().replace(/\s+/gu,' ');
+  const statusPattern = /^(?:бөлме(?:нің)? (?:күйі|көрсеткіштері)|(?:үйдің |бөлменің )?жағдайы|күйі|көрсеткіштер(?:ді|і)?(?: көрсет)?|температура(?:сы)?(?: қандай| қанша| неше градус)?|ауа температурасы(?: қандай| қанша)?|қанша градус|ылғалдылық(?: қандай| қанша)?|жарық деңгейі(?: қандай| қанша)?|қуат(?: қандай| қанша)?|статус(?: комнаты)?|состояние(?: комнаты)?|показатели(?: комнаты)?|(?:покажи )?показания датчиков|(?:какая )?(?:температура|влажность|освещенность|мощность)|сколько градусов)$/u;
+  if (statusPattern.test(command)) return { kind:'status', room };
+  if (!command || question) return unknown;
+  for (const action of chatActions) {
+    for (const [device,names] of Object.entries(chatDeviceNames)) {
+      const actionWord=action.pattern.source.slice(1,-1);
+      const deviceWord=names.source.slice(1,-1);
+      const pair=new RegExp('^(?:'+actionWord+' '+deviceWord+'|'+deviceWord+' '+actionWord+')$','u');
+      if (!pair.test(command)) continue;
+      if (action.type==='power' && device!=='lock' && device!=='curtain') return { kind:'switch', room, device, on:action.value };
+      if (action.type==='open' && device==='curtain') return { kind:'switch', room, device, on:action.value };
+      if (action.type==='open' && device==='lock') return { kind:'switch', room, device, on:!action.value };
+      if (action.type==='lock' && device==='lock') return { kind:'switch', room, device, on:action.value };
+    }
+  }
+  return unknown;
+}
+
+const chatPanel=document.querySelector('#chat-panel');
+const chatLauncher=document.querySelector('#chat-launch');
+const chatInput=document.querySelector('#chat-input');
+const chatLog=document.querySelector('#chat-log');
+
+function setChatOpen(open){
+  chatPanel.hidden=!open;
+  chatLauncher.hidden=open;
+  chatLauncher.setAttribute('aria-expanded',String(open));
+  if(open){
+    document.querySelector('#chat-room').textContent=rooms[selectedRoom];
+    chatInput.focus({preventScroll:true});
+    chatLog.scrollTop=chatLog.scrollHeight;
+  }else{
+    chatLauncher.focus({preventScroll:true});
+  }
+}
+chatLauncher.addEventListener('click',()=>setChatOpen(true));
+chatPanel.querySelector('.chat-close').addEventListener('click',()=>setChatOpen(false));
+chatPanel.addEventListener('keydown',event=>{
+  if(event.key==='Escape'){event.stopPropagation();setChatOpen(false);}
+});
+function chatMessage(message,user=false){
+  const bubble=document.createElement('p');
+  bubble.className=user?'chat-message user':'chat-message';
+  bubble.textContent=message;
+  chatLog.append(bubble);
+  while(chatLog.children.length>60)chatLog.firstElementChild.remove();
+  chatLog.scrollTop=chatLog.scrollHeight;
+}
+function chatReply(text){
+  const question=text.trim().toLowerCase().replace(/[?!.]+$/u,'');
+  if(/^(?:тарифтер|тарифтер қандай|тариф бағалары|бағалар|тарифы|цены|қандай тарифтер бар)$/u.test(question)){
+    const lines=[...document.querySelectorAll('#pricing .plan')].map(card=>card.dataset.tier+' — '+card.querySelector('.price').textContent.trim());
+    return lines.join('\n')+'\nТолық сипаттама мен өтінім формасы «Бағалар» бөлімінде.';
+  }
+  if(/^(?:өтінімдер|өтінімдерім|өтінімдерім қайда|мои заявки|где мои заявки)$/u.test(question)){
+    return '«Өтінімдер» бөлімінде осы браузерде сақталған тариф өтінімдеріңізді көре аласыз.';
+  }
+  const command=parseChat(text,selectedRoom);
+  const room=roomStates[command.room];
+  if(command.kind==='status'){
+    const readings=room.air+' °C · '+room.humidity+'% · '+room.lux+' лк · '+format.format(energyUse(room))+' кВт';
+    const equipment=devices.map(([key,label,,on,off])=>label+' — '+(room[key]?on:off).toLowerCase()).join('\n');
+    return rooms[command.room]+'\n'+readings+'\n'+equipment+'\nАвтоматты басқару '+(room.auto?'қосулы.':'өшірулі.');
+  }
+  if(command.kind==='switch'){
+    const [key,label,,on,off]=devices.find(([key])=>key===command.device);
+    selectRoom(command.room);
+    if(room[key]!==command.on){
+      room[key]=command.on;
+      manualChange('Чат · '+label+' · '+(room[key]?on:off));
+      renderDevices();
+    }
+    return rooms[command.room]+' · '+label+' '+(room[key]?on:off).toLowerCase()+'.';
+  }
+  if(command.kind==='scene'){
+    sceneButtons.find(button=>button.dataset.scene===command.scene).click();
+    const effect={away:'Барлық бөлменің шамдары мен розеткалары өшірілді, есіктер құлыпталды.',night:'Түнгі режим үйге қолданылды. Жатын бөлменің шамы 15%-ға қойылды.',movie:'Қонақ бөлменің шамы 25%-ға қойылды, перде жабылды.'};
+    return '«'+scenes[command.scene].name+'» сценарийі орындалды. '+effect[command.scene];
+  }
+  if(command.kind==='help')return '«Асхананың күйі» деп көрсеткіштерді сұраңыз. «Шамды қос», «Жатын бөлмедегі пердені жап» деп құрылғыны басқарыңыз. «Кино», «Түнгі режим» және «Үйден шығу» дайын сценарийлерін де іске қоса аласыз. Бөлме атауын жазбасаңыз, таңдалған бөлме қолданылады.';
+  return 'Сұрауды түсінбедім. Бір бөлме мен бір әрекетті атаңыз. Мысалы, «Асханадағы шамды қос».';
+}
+function sendChat(text){
+  const message=text.trim();
+  if(!message)return;
+  chatMessage(message,true);
+  chatInput.value='';
+  chatMessage(chatReply(message));
+  document.querySelector('#chat-room').textContent=rooms[selectedRoom];
+}
+document.querySelector('#chat-form').addEventListener('submit',event=>{
+  event.preventDefault();
+  sendChat(chatInput.value);
+});
+chatPanel.querySelectorAll('.chat-prompts button').forEach(button=>button.addEventListener('click',()=>sendChat(button.textContent)));
+
 </script>
 </body>
 </html>
