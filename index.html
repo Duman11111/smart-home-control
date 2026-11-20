@@ -78,6 +78,9 @@ main{background:radial-gradient(ellipse at 88% 0%,var(--halo,#37281d),transparen
 .room-photo[data-room="1"]{--window-glow:79% 33%}
 .room-photo[data-room="2"]{--window-glow:78% 33%}
 .room-stage[data-curtain-closed="true"] .room-photo::after{opacity:1}
+</style><style>
+.prices .plan{position:relative;overflow:hidden;isolation:isolate;min-height:345px}.plan .tile-icon{margin:0}.plan h3{font:500 2rem Georgia,serif}.plan.pro{background:radial-gradient(ellipse at 85% 5%,#93603277,transparent 65%),#302318;border-color:#ba8a56}.plan.premium{background:radial-gradient(ellipse at 88% 9%,#70629988,transparent 64%),#252131;border-color:#8e7dab}.plan.premium .tile-icon,.plan.premium .primary{background:#ded0fa;color:#251836;border-color:#eee2ff}.plan .secondary-action{margin:0;min-height:40px}.plan .primary{margin-top:auto}
+#plan-details{width:min(530px,calc(100% - 30px));background:#282019;color:var(--text);border:1px solid #96754f;border-radius:24px;padding:24px;box-shadow:0 20px 80px #0009}#plan-details::backdrop{background:#15110ccb;backdrop-filter:blur(5px)}.detail-title{display:flex;align-items:start;justify-content:space-between;gap:10px}#plan-details h2{font:500 2.8rem Georgia,serif;margin:0 0 14px}#plan-details[data-tier=Premium]{background:#292239;border-color:#a897c8}.request-list{display:grid;gap:12px}.request-list article{overflow-wrap:anywhere}.request-list time{color:var(--muted);font-size:.87rem}.request-list .request-message{white-space:pre-wrap;margin-top:8px}.request-list .request-status{color:var(--green);margin-top:8px}
 </style></head>
 <body>
 <header><div class="wrap nav">
@@ -87,7 +90,7 @@ main{background:radial-gradient(ellipse at 88% 0%,var(--halo,#37281d),transparen
 <button class="btn menu" aria-controls="navigation" aria-expanded="false"><span data-icon="menu"></span> Мәзір</button>
 </div></header>
 <nav class="viewbar" aria-label="Сайт бөлімдері"><div class="wrap">
-<a href="#home">Басты бет</a><a href="#features">Мүмкіндіктер</a><a href="#demo">Демо</a><a href="#how">Қалай жұмыс істейді?</a><a href="#compatibility">Үйлесімділік</a><a href="#pricing">Бағалар</a><a href="#reviews">Пікірлер</a><a href="#faq">FAQ</a><a href="#contact">Байланыс</a>
+<a href="#home">Басты бет</a><a href="#features">Мүмкіндіктер</a><a href="#demo">Демо</a><a href="#how">Қалай жұмыс істейді?</a><a href="#compatibility">Үйлесімділік</a><a href="#pricing">Бағалар</a><a href="#reviews">Пікірлер</a><a href="#faq">FAQ</a><a href="#contact">Байланыс</a><a href="#requests">Өтінімдер</a>
 </div></nav>
 <main>
 <section id="home" class="hero wrap" aria-labelledby="hero-title">
@@ -138,9 +141,9 @@ main{background:radial-gradient(ellipse at 88% 0%,var(--halo,#37281d),transparen
 <article class="card"><span class="tile-icon" data-icon="voice"></span><h3>Apple Home және Google Home</h3><p>Үйлесімді құрылғылар мен дауыстық көмекшілерді біріктіретін платформалар.</p></article></div><div class="stats reveal" aria-label="Демо панель статистикасы"><div><strong data-count="4">4</strong><span>Демо бөлме</span></div><div><strong data-count="6">6</strong><span>Құрылғы түрі</span></div><div><strong data-count="3">3</strong><span>Дайын сценарий</span></div></div></section>
 
 <section class="block wrap" id="pricing"><div class="section-head reveal"><span class="eyebrow">Бағалар</span><h2>Өзіңізге сай тариф</h2><p>Төмендегі бағалар мен тарифтер үлгі ретінде берілген.</p></div><div class="grid prices">
-<article class="card reveal"><h3>Basic</h3><div class="price">0 ₸ <small>/ ай</small></div><p>Алғашқы құрылғыларды қосуға.</p><ul><li>5 құрылғыға дейін</li><li>2 бөлме</li><li>Қолмен басқару</li></ul><a class="btn" data-plan="Basic" href="#contact">Basic таңдау</a></article>
-<article class="card featured reveal"><h3>Pro</h3><div class="price">2 490 ₸ <small>/ ай</small></div><p>Бүкіл үйді басқаруға.</p><ul><li>25 құрылғыға дейін</li><li>Шексіз бөлме</li><li>Сценарийлер мен энергия есебі</li></ul><a class="btn primary" data-plan="Pro" href="#contact">Pro таңдау</a></article>
-<article class="card reveal"><h3>Premium</h3><div class="price">4 990 ₸ <small>/ ай</small></div><p>Бірнеше үйді басқаруға.</p><ul><li>Шексіз құрылғы</li><li>Бірнеше үй профилі</li><li>Кеңейтілген автоматтандыру</li></ul><a class="btn" data-plan="Premium" href="#contact">Premium таңдау</a></article>
+<article class="card plan basic reveal" data-tier="Basic"><span class="tile-icon" data-icon="home"></span><h3>Basic</h3><div class="price">0 ₸ <small>/ ай</small></div><p>Алғашқы құрылғыларды қосуға.</p><ul><li>5 құрылғыға дейін</li><li>2 бөлме</li><li>Қолмен басқару</li></ul><button type="button" class="btn secondary-action" data-detail="Basic">Толығырақ</button><a class="btn primary" data-plan="Basic" href="#contact">Өтінім беру</a></article>
+<article class="card plan pro reveal" data-tier="Pro"><span class="tile-icon" data-icon="spark"></span><h3>Pro</h3><div class="price">2 490 ₸ <small>/ ай</small></div><p>Бүкіл үйді басқаруға.</p><ul><li>25 құрылғыға дейін</li><li>Шексіз бөлме</li><li>Сценарийлер мен энергия есебі</li></ul><button type="button" class="btn secondary-action" data-detail="Pro">Толығырақ</button><a class="btn primary" data-plan="Pro" href="#contact">Өтінім беру</a></article>
+<article class="card plan premium reveal" data-tier="Premium"><span class="tile-icon" data-icon="lock"></span><h3>Premium</h3><div class="price">4 990 ₸ <small>/ ай</small></div><p>Бірнеше үйді басқаруға.</p><ul><li>Шексіз құрылғы</li><li>Бірнеше үй профилі</li><li>Кеңейтілген автоматтандыру</li></ul><button type="button" class="btn secondary-action" data-detail="Premium">Толығырақ</button><a class="btn primary" data-plan="Premium" href="#contact">Өтінім беру</a></article>
 </div></section>
 
 <section class="block wrap" id="reviews"><div class="section-head reveal"><span class="eyebrow">Үлгі пікірлер</span><h2>Күнделікті өмірде</h2><p>Ақылды үйді қолданудың үш мысалы.</p></div><div class="grid reviews">
@@ -153,12 +156,14 @@ main{background:radial-gradient(ellipse at 88% 0%,var(--halo,#37281d),transparen
 <details><summary>Әртүрлі брендтің құрылғыларын бірге қолдануға бола ма?</summary><p>Нақты жүйеде үйлесімділік құрылғының моделіне, байланыс хаттамасына және хабқа байланысты.</p></details>
 </div></section>
 
-<section class="block wrap" id="contact"><div class="contact reveal"><div><span class="eyebrow">Байланыс</span><h2>Сұрағыңыз бар ма?</h2><p>Форманы толтырып көріңіз. Хабарлама үлгісі осы браузерде сақталады.</p></div><form class="form-grid">
+<section class="block wrap" id="contact"><div class="contact reveal"><div><span class="eyebrow">Байланыс</span><h2>Сұрағыңыз бар ма?</h2><p>Тарифке өтінім беру үшін деректеріңізді толтырыңыз. Өтінім осы браузерде сақталады.</p></div><form class="form-grid">
 <label>Атыңыз<input name="name" autocomplete="name" required maxlength="80"></label><label>Электрондық пошта<input type="email" name="email" autocomplete="email" required maxlength="150"></label>
 <label class="wide">Тариф<select name="plan"><option value="">Тарифті таңдаңыз</option><option>Basic</option><option>Pro</option><option>Premium</option></select></label>
-<label class="wide">Хабарлама<textarea name="message" rows="3" required maxlength="1500"></textarea></label><button class="btn primary wide" type="submit">Хабарламаны сақтау</button><p class="wide" id="form-status" role="status"></p>
+<label class="wide">Хабарлама<textarea name="message" rows="3" maxlength="1500"></textarea></label><button class="btn primary wide" type="submit">Сақтау</button><p class="wide" id="form-status" role="status"></p>
 </form></div></section>
+<section class="block wrap" id="requests"><div class="section-head"><span class="eyebrow">Өтінімдер</span><h2>Тарифке берген өтінімдерім</h2><p>Осы браузерде сақталған өтінімдер тізімі.</p></div><div class="request-list"></div><div class="actions"><a class="btn primary" href="#pricing">Тарифтерді қарау</a></div></section>
 </main>
+<dialog id="plan-details" aria-labelledby="detail-name"><div class="detail-title"><h2 id="detail-name"></h2><form method="dialog"><button class="btn" aria-label="Жабу">Жабу</button></form></div><p id="detail-description"></p><ul id="detail-benefits"></ul><a class="btn primary" id="detail-apply" href="#contact">Өтінім беру</a></dialog>
 <footer><div class="wrap"><a class="brand" href="#home"><i data-icon="home"></i><span>Smart Home <span>Control</span></span></a><span>© 2026 Smart Home Control · Демо жоба</span><a href="#faq">Жиі қойылатын сұрақтар</a></div></footer>
 <script>
 const icons = {
@@ -376,9 +381,76 @@ document.addEventListener('keydown',event=>{
   }
 });
 
-const form=document.querySelector('form');
+const form=document.querySelector('#contact form');
 const formStatus=document.querySelector('#form-status');
 const contactKey='smart-home-control-contact';
+const requestKey='smart-home-control-requests';
+const requestList=document.querySelector('.request-list');
+const planDetails=document.querySelector('#plan-details');
+const planCopy={
+  Basic:'Жарық пен розетка секілді алғашқы құрылғыларды бір жерден басқаруға арналған.',
+  Pro:'Бірнеше бөлмедегі құрылғыларды сценариймен басқарып, энергия шығынын бақылауға арналған.',
+  Premium:'Бірнеше үйді бөлек профильдерде басқаруға және кеңейтілген автоматтандыру орнатуға арналған.'
+};
+function openPlan(name){
+  const card=document.querySelector('[data-tier="'+name+'"]');
+  planDetails.dataset.tier=name;
+  planDetails.querySelector('h2').textContent=name+' · '+card.querySelector('.price').textContent;
+  planDetails.querySelector('#detail-description').textContent=planCopy[name];
+  planDetails.querySelector('ul').replaceChildren(...card.querySelector('ul').cloneNode(true).children);
+  planDetails.showModal();
+}
+document.querySelectorAll('[data-detail]').forEach(button=>button.addEventListener('click',()=>openPlan(button.dataset.detail)));
+function loadRequests(){
+  let records=JSON.parse(localStorage.getItem(requestKey));
+  if(Array.isArray(records))return records;
+  const old=JSON.parse(localStorage.getItem(contactKey));
+  return old && Object.hasOwn(planCopy,old.plan) ? [{...old,createdAt:null}] : [];
+}
+function renderRequests(){
+  requestList.replaceChildren();
+  let records=[];
+  try {records=loadRequests();} catch {}
+  if(!records.length){
+    const empty=document.createElement('p');
+    empty.textContent='Әзірге өтінім жоқ.';
+    requestList.append(empty);
+  }
+  records.forEach(record=>{
+    const card=document.createElement('article');
+    card.className='card';
+    const fields=[
+      ['h3',record.plan],['p',record.name],['p',record.email],
+      ['time',record.createdAt?new Date(record.createdAt).toLocaleString('kk-KZ'):'Бұрын сақталған өтінім'],
+      ['p',record.message,'request-message'],['p','Браузерде сақталды','request-status']
+    ];
+    fields.forEach(([tag,value,className])=>{
+      if(!value)return;
+      const element=document.createElement(tag);
+      element.textContent=value;
+      if(className)element.className=className;
+      card.append(element);
+    });
+    requestList.append(card);
+  });
+}
+renderRequests();
+function choosePlan(name){
+  form.elements.plan.value=name;
+  formStatus.textContent='';
+  syncForm();
+}
+const submit=form.querySelector('button[type=submit]');
+function syncForm(){
+  const hasPlan=Object.hasOwn(planCopy,form.elements.plan.value);
+  form.elements.message.required=!hasPlan;
+  submit.textContent=hasPlan?'Өтінімді жіберу':'Хабарламаны сақтау';
+}
+form.elements.plan.addEventListener('change',syncForm);
+document.querySelector('#detail-apply').addEventListener('click',()=>{
+  choosePlan(planDetails.dataset.tier);
+  planDetails.close();
+});
 try {
   const saved=JSON.parse(localStorage.getItem(contactKey));
   if(saved) ['name','email','plan','message'].forEach(field=>{
@@ -386,15 +458,30 @@ try {
   });
 } catch {}
 document.querySelectorAll('[data-plan]').forEach(link=>link.addEventListener('click',()=>{
-  form.elements.plan.value=link.dataset.plan;
-  formStatus.textContent='';
+  choosePlan(link.dataset.plan);
 }));
+syncForm();
 form.addEventListener('input',()=>{formStatus.textContent='';});
 form.addEventListener('submit',event=>{
   event.preventDefault();
   try {
-    localStorage.setItem(contactKey,JSON.stringify(Object.fromEntries(new FormData(form))));
-    formStatus.textContent='Хабарлама осы браузерде сақталды.';
+    const entry=Object.fromEntries(new FormData(form));
+    if(Object.hasOwn(planCopy,entry.plan)){
+      const records=loadRequests();
+      records.unshift({...entry,createdAt:new Date().toISOString()});
+      localStorage.setItem(requestKey,JSON.stringify(records));
+      renderRequests();
+      form.reset();
+      syncForm();
+      const link=document.createElement('a');
+      link.href='#requests';
+      link.textContent='Өтінімді көру';
+      link.style.textDecoration='underline';
+      formStatus.replaceChildren('Өтінім сақталды. ',link);
+    }else{
+      localStorage.setItem(contactKey,JSON.stringify(entry));
+      formStatus.textContent='Хабарлама осы браузерде сақталды.';
+    }
   } catch {
     formStatus.textContent='Браузер хабарламаны сақтай алмады.';
   }
