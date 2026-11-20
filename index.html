@@ -81,6 +81,8 @@ main{background:radial-gradient(ellipse at 88% 0%,var(--halo,#37281d),transparen
 </style><style>
 .prices .plan{position:relative;overflow:hidden;isolation:isolate;min-height:345px}.plan .tile-icon{margin:0}.plan h3{font:500 2rem Georgia,serif}.plan.pro{background:radial-gradient(ellipse at 85% 5%,#93603277,transparent 65%),#302318;border-color:#ba8a56}.plan.premium{background:radial-gradient(ellipse at 88% 9%,#70629988,transparent 64%),#252131;border-color:#8e7dab}.plan.premium .tile-icon,.plan.premium .primary{background:#ded0fa;color:#251836;border-color:#eee2ff}.plan .secondary-action{margin:0;min-height:40px}.plan .primary{margin-top:auto}
 #plan-details{width:min(530px,calc(100% - 30px));background:#282019;color:var(--text);border:1px solid #96754f;border-radius:24px;padding:24px;box-shadow:0 20px 80px #0009}#plan-details::backdrop{background:#15110ccb;backdrop-filter:blur(5px)}.detail-title{display:flex;align-items:start;justify-content:space-between;gap:10px}#plan-details h2{font:500 2.8rem Georgia,serif;margin:0 0 14px}#plan-details[data-tier=Premium]{background:#292239;border-color:#a897c8}.request-list{display:grid;gap:12px}.request-list article{overflow-wrap:anywhere}.request-list time{color:var(--muted);font-size:.87rem}.request-list .request-message{white-space:pre-wrap;margin-top:8px}.request-list .request-status{color:var(--green);margin-top:8px}
+</style><style>
+.iot{margin:16px 0;padding:19px;border:1px solid var(--line);background:#231c16;border-radius:19px}.iot h3{margin-bottom:10px}.sensor-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:12px 0}.sensor-grid label{display:grid;gap:5px;color:var(--muted)}.iot svg{width:100%;height:145px;display:block;margin:8px 0}.iot-history{max-height:230px;overflow:auto}.iot-history table{width:100%;border-collapse:collapse;text-align:left;white-space:nowrap}.iot-history td,.iot-history th{padding:7px;border-bottom:1px solid var(--line)}.iot-alert{color:#ffd397;margin:10px 0}.device.active .ico{animation:iot-pulse 2.2s ease-in-out infinite}@keyframes iot-pulse{50%{filter:drop-shadow(0 0 6px #e9bd87aa)}}
 </style></head>
 <body>
 <header><div class="wrap nav">
@@ -102,7 +104,7 @@ main{background:radial-gradient(ellipse at 88% 0%,var(--halo,#37281d),transparen
 <div class="hero-status"><i class="dot"></i> Демо үй желіде</div>
 </div>
 <div class="hero-links" aria-label="Жылдам кіру">
-<a class="hero-link" href="#demo"><span data-icon="home"></span><span><strong>Басқару панелі</strong><small>4 бөлме · 6 құрылғы түрі</small></span></a>
+<a class="hero-link" href="#demo"><span data-icon="home"></span><span><strong>Басқару панелі</strong><small>4 бөлме · 7 құрылғы түрі</small></span></a>
 <a class="hero-link" href="#features"><span data-icon="bulb"></span><span><strong>Мүмкіндіктер</strong><small>Жарық, климат, қауіпсіздік</small></span></a>
 <a class="hero-link" href="#how"><span data-icon="spark"></span><span><strong>Қалай жұмыс істейді?</strong><small>Үш қарапайым қадам</small></span></a>
 </div><div class="brands" aria-label="Үйлесімділік мысалдары"><span>Үйлесімділік мысалдары</span><strong>Matter</strong><strong>Philips Hue</strong><strong>Aqara</strong><strong>Google Home</strong><strong>Apple Home</strong></div>
@@ -127,7 +129,20 @@ main{background:radial-gradient(ellipse at 88% 0%,var(--halo,#37281d),transparen
 <div class="dash-grid"><div class="devices"></div><aside><div class="chart"><div class="chart-head"><h3>Энергия шығыны</h3><span>Бүгін</span></div>
 <svg viewBox="0 0 260 105" role="img" aria-label="Күн ішіндегі демо энергия шығыны"><defs><linearGradient id="fill" x2="0" y2="1"><stop stop-color="#eaba82" stop-opacity=".43"/><stop offset="1" stop-color="#eaba82" stop-opacity="0"/></linearGradient></defs><path d="M0 25H260M0 55H260M0 85H260" stroke="#273953"/><path id="chart-fill" fill="url(#fill)"/><path id="chart-line" fill="none" stroke="#edbb80" stroke-width="2.5" stroke-linejoin="round"/></svg>
 <div class="chart-labels"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span></div></div><div class="chart"><h3>Үй жоспары</h3><div class="floor" aria-label="Картадан бөлме таңдау"></div></div></aside></div></div>
-<div class="scenes" aria-label="Сценарийлер"><button data-scene="away" aria-pressed="false"><span data-icon="door"></span> Үйден шығу</button><button data-scene="night" aria-pressed="false"><span data-icon="moon"></span> Түнгі режим</button><button data-scene="movie" aria-pressed="false"><span data-icon="play"></span> Кино</button></div><p class="scene-status" role="status"></p>
+<div class="iot" id="iot-monitor">
+<h3>Виртуалды датчиктер және мониторинг</h3><p>Мәндерді таңдалған бөлме үшін өзгертіңіз.</p>
+<form id="sensor-form"><div class="sensor-grid">
+<label>Температура, °C<input name="air" type="number" min="0" max="60" required></label>
+<label>Ылғалдылық, %<input name="humidity" type="number" min="0" max="100" required></label>
+<label>Жарық, лк<input name="lux" type="number" min="0" max="2000" required></label>
+</div><button class="btn primary" type="submit">Көрсеткіштерді қолдану</button></form>
+<label><input id="iot-auto" type="checkbox"> Автоматты басқару</label>
+<p>Температура 28 °C-тан бастап кондиционерді, 18 °C-қа дейін жылытқышты қосады. 100 лк-ден төменде шам жанады. Ылғалдылық 70%-дан бастап ескерту шығады.</p>
+<p class="iot-alert" role="status" id="iot-alert"></p><p id="iot-storage" role="status"></p><button type="button" id="iot-cloud" class="btn">Бұлтқа сақтау</button><p id="iot-cloud-status" role="status">Supabase жобасы бапталмаған</p>
+<label>Тарих графигі<select id="iot-series"><option value="air">Температура, °C</option><option value="humidity">Ылғалдылық, %</option><option value="lux">Жарық, лк</option><option value="power">Қуат, кВт</option></select></label>
+<p id="iot-scale"></p><svg viewBox="0 0 500 130" role="img" aria-label="Таңдалған көрсеткіштің тарихы" preserveAspectRatio="none"><path d="M0 20H500M0 65H500M0 110H500" stroke="#65503d"/><polyline id="iot-chart" fill="none" stroke="#efbf85" stroke-width="3" vector-effect="non-scaling-stroke"/></svg>
+<div class="iot-history"><table><thead><tr><th>Уақыт</th><th>°C</th><th>%</th><th>лк</th><th>кВт</th><th>Әрекет</th></tr></thead><tbody id="iot-history"></tbody></table></div>
+</div><div class="scenes" aria-label="Сценарийлер"><button data-scene="away" aria-pressed="false"><span data-icon="door"></span> Үйден шығу</button><button data-scene="night" aria-pressed="false"><span data-icon="moon"></span> Түнгі режим</button><button data-scene="movie" aria-pressed="false"><span data-icon="play"></span> Кино</button></div><p class="scene-status" role="status"></p>
 </div></div></section>
 
 <section class="block wrap" id="how"><div class="section-head reveal"><span class="eyebrow">Қалай жұмыс істейді?</span><h2>Үш қадамда дайын</h2></div><div class="grid steps">
@@ -138,7 +153,7 @@ main{background:radial-gradient(ellipse at 88% 0%,var(--halo,#37281d),transparen
 <section class="block wrap" id="compatibility"><div class="section-head"><span class="eyebrow">Үйлесімділік</span><h2>Құрылғылар мен экожүйелер</h2><p>Ақылды үй жүйесінде кездесетін стандарттар мен брендтер.</p></div><div class="grid">
 <article class="card"><span class="tile-icon" data-icon="plug"></span><h3>Matter</h3><p>Үйлесімді құрылғыларды әртүрлі платформаларда байланыстыруға арналған стандарт.</p></article>
 <article class="card"><span class="tile-icon" data-icon="bulb"></span><h3>Philips Hue және Aqara</h3><p>Ақылды жарық, датчиктер мен тұрмыстық автоматтандыру құрылғыларының мысалдары.</p></article>
-<article class="card"><span class="tile-icon" data-icon="voice"></span><h3>Apple Home және Google Home</h3><p>Үйлесімді құрылғылар мен дауыстық көмекшілерді біріктіретін платформалар.</p></article></div><div class="stats reveal" aria-label="Демо панель статистикасы"><div><strong data-count="4">4</strong><span>Демо бөлме</span></div><div><strong data-count="6">6</strong><span>Құрылғы түрі</span></div><div><strong data-count="3">3</strong><span>Дайын сценарий</span></div></div></section>
+<article class="card"><span class="tile-icon" data-icon="voice"></span><h3>Apple Home және Google Home</h3><p>Үйлесімді құрылғылар мен дауыстық көмекшілерді біріктіретін платформалар.</p></article></div><div class="stats reveal" aria-label="Демо панель статистикасы"><div><strong data-count="4">4</strong><span>Демо бөлме</span></div><div><strong data-count="7">7</strong><span>Құрылғы түрі</span></div><div><strong data-count="3">3</strong><span>Дайын сценарий</span></div></div></section>
 
 <section class="block wrap" id="pricing"><div class="section-head reveal"><span class="eyebrow">Бағалар</span><h2>Өзіңізге сай тариф</h2><p>Төмендегі бағалар мен тарифтер үлгі ретінде берілген.</p></div><div class="grid prices">
 <article class="card plan basic reveal" data-tier="Basic"><span class="tile-icon" data-icon="home"></span><h3>Basic</h3><div class="price">0 ₸ <small>/ ай</small></div><p>Алғашқы құрылғыларды қосуға.</p><ul><li>5 құрылғыға дейін</li><li>2 бөлме</li><li>Қолмен басқару</li></ul><button type="button" class="btn secondary-action" data-detail="Basic">Толығырақ</button><a class="btn primary" data-plan="Basic" href="#contact">Өтінім беру</a></article>
@@ -205,13 +220,139 @@ const devices = [
   ['lock','Есік құлпы','lock','Құлыптаулы','Ашық'],
   ['curtain','Перде','curtain','Ашық','Жабық'],
   ['camera','Камера','camera','Қосулы','Өшірулі'],
-  ['socket','Розетка','plug','Қосулы','Өшірулі']
+  ['socket','Розетка','plug','Қосулы','Өшірулі'],
+  ['heater','Жылытқыш','climate','Қосулы','Өшірулі']
 ];
 const roomStates = rooms.map((_,index) => ({
   light:index!==1, ac:index<2, lock:index===3, curtain:index!==3,
   camera:index===3, socket:index!==3, brightness:index===0?75:60,
-  temperature:[23,21,24,20][index], humidity:[46,50,53,42][index]
+  temperature:[23,21,24,20][index], humidity:[46,50,53,42][index], air:[23,21,24,20][index], lux:[250,145,390,110][index], heater:false, auto:false
 }));
+const sensorForm=document.querySelector('#sensor-form');
+const automaticToggle=document.querySelector('#iot-auto');
+const historySelect=document.querySelector('#iot-series');
+const storageStatus=document.querySelector('#iot-storage');
+const history=rooms.map(()=>[]);
+const changedDuringLoad=new Set();
+let db;
+const energyUse=room=>Number((0.18+(room.light?room.brightness*.001:0)+(room.ac?.83:0)+(room.heater?1.1:0)+(room.camera?.04:0)+(room.socket?.22:0)).toFixed(2));
+
+function connectDatabase(){
+  return new Promise((resolve,reject)=>{
+    const request=indexedDB.open('smart-home-iot',1);
+    request.onupgradeneeded=()=>request.result.createObjectStore('rooms',{keyPath:'index'});
+    request.onsuccess=()=>resolve(request.result);
+    request.onerror=()=>reject(request.error);
+  });
+}
+function readDatabase(){
+  return new Promise((resolve,reject)=>{
+    const request=db.transaction('rooms').objectStore('rooms').getAll();
+    request.onsuccess=()=>resolve(request.result);
+    request.onerror=()=>reject(request.error);
+  });
+}
+function logRoom(index,action){
+  const room=roomStates[index];
+  changedDuringLoad.add(index);
+  const records=history[index];
+  records.push({at:new Date().toISOString(),air:room.air,humidity:room.humidity,lux:room.lux,power:energyUse(room),action});
+  if(records.length>120)records.shift();
+  saveRoom(index);
+}
+function saveRoom(index){
+  if(!db)return;
+  const room=roomStates[index],records=history[index];
+  const tx=db.transaction('rooms','readwrite');
+  tx.objectStore('rooms').put({index,state:{...room},records:[...records]});
+  tx.oncomplete=()=>{storageStatus.textContent='IndexedDB · Деректер сақталды';};
+  tx.onabort=()=>{storageStatus.textContent='Дерекқорға сақтау сәтсіз болды';};
+}
+function updateMonitor(){
+  const room=roomStates[selectedRoom];
+  for(const key of ['air','humidity','lux'])sensorForm.elements[key].value=room[key];
+  automaticToggle.checked=room.auto;
+  const warnings=[];
+  if(room.air>=28)warnings.push('Температура жоғары');
+  if(room.air<=18)warnings.push('Температура төмен');
+  if(room.humidity>=70)warnings.push('Ылғалдылық жоғары');
+  if(room.lux<100)warnings.push('Жарық жеткіліксіз');
+  document.querySelector('#iot-alert').textContent=warnings.length?'⚠ '+warnings.join(' · '):'Көрсеткіштер қалыпты';
+  renderHistory();
+}
+function renderHistory(){
+  const records=history[selectedRoom].slice(-24);
+  const key=historySelect.value;
+  const values=records.map(row=>row[key]);
+  const min=Math.min(...values),max=Math.max(...values);
+  const points=values.map((v,i)=>[(i/Math.max(values.length-1,1))*500,max===min?65:110-90*(v-min)/(max-min)].join(','));
+  if(points.length===1)points.push('500,65');
+  document.querySelector('#iot-chart').setAttribute('points',points.join(' '));
+  document.querySelector('#iot-scale').textContent=values.length?'Ең аз '+min+' · Ең көп '+max:'Әзірге жазба жоқ';
+  const rows=[...records].reverse().map(record=>{
+    const tr=document.createElement('tr');
+    for(const value of [new Date(record.at).toLocaleTimeString('kk-KZ'),record.air,record.humidity,record.lux,record.power,record.action]){
+      const td=document.createElement('td');
+      td.textContent=value;
+      tr.append(td);
+    }
+    return tr;
+  });
+  document.querySelector('#iot-history').replaceChildren(...rows);
+}
+function applyRules(room){
+  if(!room.auto)return;
+  room.ac=room.air>=28;
+  room.heater=room.air<=18;
+  room.light=room.lux<100;
+}
+sensorForm.addEventListener('submit',event=>{
+  event.preventDefault();
+  const room=roomStates[selectedRoom];
+  for(const key of ['air','humidity','lux'])room[key]=Number(sensorForm.elements[key].value);
+  applyRules(room);
+  manualChange('Датчиктер жаңартылды');
+  renderDevices();
+});
+automaticToggle.addEventListener('change',()=>{
+  const room=roomStates[selectedRoom];
+  room.auto=automaticToggle.checked;
+  applyRules(room);
+  manualChange(room.auto?'Автоматтандыру қосылды':'Автоматтандыру өшірілді');
+  renderDevices();
+});
+historySelect.addEventListener('change',renderHistory);
+const cloudConfig={url:'',publishableKey:''};
+const cloudButton=document.querySelector('#iot-cloud');
+const cloudStatus=document.querySelector('#iot-cloud-status');
+cloudButton.disabled=!cloudConfig.url||!cloudConfig.publishableKey;
+let cloudClient;
+cloudButton.addEventListener('click',async()=>{
+  cloudButton.disabled=true;
+  cloudStatus.textContent='Бұлтқа сақталып жатыр…';
+  try{
+    if(!cloudClient){
+      const {createClient}=await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
+      cloudClient=createClient(cloudConfig.url,cloudConfig.publishableKey);
+    }
+    const session=await cloudClient.auth.getSession();
+    if(session.error)throw session.error;
+    if(!session.data.session){
+      const login=await cloudClient.auth.signInAnonymously();
+      if(login.error)throw login.error;
+    }
+    const snapshots=roomStates.map((state,room_index)=>({
+      room_index,room_state:state,records:history[room_index],updated_at:new Date().toISOString()
+    }));
+    const result=await cloudClient.from('iot_room_snapshots').upsert(snapshots,{onConflict:'owner_id,room_index'}).select('room_index');
+    if(result.error)throw result.error;
+    if(result.data.length!==rooms.length)throw Error('Incomplete save');
+    cloudStatus.textContent='Supabase · 4 бөлме бұлтта сақталды';
+  }catch{
+    cloudStatus.textContent='Бұлтқа сақтау сәтсіз болды · Жергілікті деректер сақталады';
+  }finally{cloudButton.disabled=false;}
+});
+if(!cloudButton.disabled)cloudStatus.textContent='Supabase · Сақтауға дайын';
 const tabs = document.querySelector('.tabs');
 const panel = document.querySelector('#room-panel');
 const deviceList = document.querySelector('.devices');
@@ -271,15 +412,19 @@ function readouts() {
   roomStage.dataset.curtainClosed=String(!room.curtain);
   document.querySelector('#quick-curtain').textContent=room.curtain ? 'Перде ашық' : 'Перде жабық';
   quickButtons.forEach(button=>button.setAttribute('aria-pressed',room[button.dataset.quick]));
-  const temperature = room.ac ? room.temperature : [24,22,25,21][selectedRoom];
-  const watts = 0.18 + (room.light ? room.brightness * .001 : 0) + (room.ac ? .83 : 0) + (room.camera ? .04 : 0) + (room.socket ? .22 : 0);
+  const temperature = room.air;
+  const watts = energyUse(room);
   document.querySelector('#temperature').textContent = temperature + ' °C';
   document.querySelector('#humidity').textContent = room.humidity + '%';
   document.querySelector('#energy').textContent = format.format(watts) + ' кВт';
-  const points = [80,71,76,53,62,39,48,36,52,Math.round(86-watts*43)].map((y,index) => (index*260/9).toFixed(1)+' '+Math.max(8,y));
+  const observed=history[selectedRoom].slice(-10).map(record=>record.power);
+  if(!observed.length)observed.push(watts);
+  if(observed.length===1)observed.push(observed[0]);
+  const points=observed.map((value,index)=>(index*260/(observed.length-1)).toFixed(1)+' '+Math.max(8,95-value*37));
   const line = 'M'+points.join('L');
   document.querySelector('#chart-line').setAttribute('d',line);
   document.querySelector('#chart-fill').setAttribute('d',line+'L260 105H0Z');
+  updateMonitor();
 }
 
 function renderDevices() {
@@ -312,7 +457,8 @@ function selectRoom(index,moveFocus=false) {
   if (moveFocus) tabs.children[index].focus();
 }
 
-function manualChange() {
+function manualChange(action='Құрылғы өзгерді') {
+  logRoom(selectedRoom,action);
   sceneButtons.forEach(button => button.setAttribute('aria-pressed','false'));
   sceneStatus.textContent='';
 }
@@ -347,25 +493,42 @@ deviceList.addEventListener('input',event => {
   const room=roomStates[selectedRoom];
   room.brightness=Number(event.target.value);
   event.target.nextElementSibling.value=room.brightness+'%';
-  manualChange();
   readouts();
+});
+deviceList.addEventListener('change',event=>{
+  if(event.target.type==='range'){manualChange('Шам жарықтығы өзгерді');readouts();}
 });
 
 const scenes = {
-  away:{name:'Үйден шығу',apply:room=>Object.assign(room,{light:false,ac:false,lock:true,curtain:false,camera:true,socket:false})},
+  away:{name:'Үйден шығу',apply:room=>Object.assign(room,{light:false,ac:false,heater:false,lock:true,curtain:false,camera:true,socket:false})},
   night:{name:'Түнгі режим',apply:(room,index)=>Object.assign(room,{light:index===1,brightness:15,lock:true,curtain:false,camera:index===3})},
   movie:{name:'Кино',apply:(room,index)=>{if(index===0) Object.assign(room,{light:true,brightness:25,curtain:false,socket:true});}}
 };
 sceneButtons.forEach(button => button.addEventListener('click',() => {
   const scene=scenes[button.dataset.scene];
-  roomStates.forEach(scene.apply);
+  roomStates.forEach((room,index)=>{scene.apply(room,index);logRoom(index,scene.name);});
   const sceneRoom={night:1,movie:0};
   selectRoom(sceneRoom[button.dataset.scene] ?? selectedRoom);
   sceneButtons.forEach(item=>item.setAttribute('aria-pressed',item===button));
   sceneStatus.textContent='«'+scene.name+'» сценарийі іске қосылды.';
 }));
 selectRoom(0);
-
+(async()=>{
+  try {
+    db=await connectDatabase();
+    const saved=await readDatabase();
+    saved.forEach(record=>{
+      if(!roomStates[record.index] || changedDuringLoad.has(record.index))return;
+      Object.assign(roomStates[record.index],record.state);
+      history[record.index]=record.records;
+    });
+    rooms.forEach((_,index)=>{if(!saved.some(record=>record.index===index) || changedDuringLoad.has(index))saveRoom(index);});
+    storageStatus.textContent='IndexedDB · Дерекқор дайын';
+    renderDevices();
+  }catch{
+    storageStatus.textContent='IndexedDB қолжетімсіз · Деректер осы сеанста ғана сақталады';
+  }
+})();
 const menu=document.querySelector('.menu');
 const navigation=document.querySelector('#navigation');
 function setMenu(open) {
