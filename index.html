@@ -233,6 +233,7 @@ footer{padding-bottom:78px}
 }
 
 </style>
+<style>.room-hotspots button[hidden]{display:none}</style>
 </head>
 <body>
 <header><div class="wrap nav">
@@ -272,6 +273,7 @@ footer{padding-bottom:78px}
     <button type="button" data-quick="light" aria-label="Шам"><span data-icon="bulb"></span><span id="quick-light"></span></button>
     <button type="button" data-quick="ac" aria-label="Кондиционер"><span data-icon="climate"></span><span id="quick-ac"></span></button>
     <button type="button" data-quick="lock" aria-label="Есік құлпы"><span data-icon="lock"></span><span id="quick-lock"></span></button>
+    <button type="button" data-quick="door" hidden><span data-icon="door"></span><span id="quick-door">Есікті ашу</span></button>
     <button type="button" data-quick="curtain" aria-label="Перде"><span data-icon="curtain"></span><span id="quick-curtain"></span></button>
   </div></div>
 </div>
@@ -379,18 +381,20 @@ document.querySelector('#feature-list').innerHTML = features.map(([symbol,title,
 ).join('');
 document.querySelectorAll('[data-icon]').forEach(element => { element.innerHTML = icon(element.dataset.icon); });
 
-const rooms = ['Қонақ бөлме','Ұйықтайтын бөлме','Асхана','Ауыз үй'];
+const rooms = ['Қонақ бөлме','Ұйықтайтын бөлме','Асхана','Кіреберіс бөлме'];
+const entryRoom = rooms.length - 1;
 const devices = [
   ['light','Шам','bulb','Қосулы','Өшірулі'],
   ['ac','Кондиционер','climate','Қосулы','Өшірулі'],
-  ['lock','Есік құлпы','lock','Құлыптаулы','Ашық'],
+  ['lock','Есік құлпы','lock','Құлыптаулы','Құлпы ашық'],
   ['curtain','Перде','curtain','Ашық','Жабық'],
   ['camera','Камера','camera','Қосулы','Өшірулі'],
   ['socket','Розетка','plug','Қосулы','Өшірулі'],
   ['heater','Жылытқыш','climate','Қосулы','Өшірулі']
 ];
 const roomStates = rooms.map((_,index) => ({
-  light:index!==1, ac:index<2, lock:index===3, curtain:index!==3,
+  light:index!==1, ac:index<2, lock:index===entryRoom,
+  ...(index===entryRoom ? {door:false} : {}), curtain:index!==3,
   camera:index===3, socket:index!==3, brightness:index===0?75:60,
   temperature:[23,21,24,20][index], humidity:[46,50,53,42][index], air:[23,21,24,20][index], lux:[250,145,390,110][index], heater:false, auto:false
 }));
@@ -538,7 +542,7 @@ const roomPhotos = [
   { asset:'--room', description:'Жылы жарық түскен қонақ бөлме', position:'53%' },
   { asset:'--room-bed', description:'Жұмсақ жарықтанған жатын бөлме', position:'53%' },
   { asset:'--room-kitchen', description:'Жарық жолақтары бар қара түсті ас үй', position:'52%' },
-  { asset:'--room-entry', description:'Ағаш есігі бар жылы реңкті ауыз үй', position:'52%' }
+  { asset:'--room-entry', description:'Ағаш есігі бар жылы реңкті кіреберіс бөлме', position:'52%' }
 ];
 const floor = document.querySelector('.floor');
 floor.innerHTML = rooms.map((room,index) =>
@@ -565,7 +569,7 @@ function showRoomPhoto(index) {
 /* Window outlines use the same 480 × 320 coordinates as the reference photos.
    The lower edges follow furniture silhouettes in front of the glass. */
 const roomWindows = [
-  [[84,93],[374,89],[374,172],[360,174],[359,184],[228,183],[215,177],[113,176],[111,165],[85,170]],
+  [[84,83],[373,83],[373,173],[360,174],[359,184],[228,183],[215,177],[113,176],[111,165],[85,170]],
   [[278,67],[446,46],[446,143],[429,150],[423,160],[409,161],[395,167],[389,183],[301,178],[292,168],[278,167]],
   [[205,70],[408,62],[411,61],[479,32],[479,183],[451,181],[445,176],[396,174],[377,170],[355,173],[343,174],[343,198],[281,198],[281,166],[250,166],[244,156],[228,156],[225,167],[206,168]],
   [[143,48],[214,48],[214,222],[145,222],[145,191],[153,187],[154,179],[144,174]]
@@ -579,7 +583,7 @@ const roomBitmaps=new Map();
 const sceneCanvas=document.querySelector('#room-render');
 const sceneContext=sceneCanvas.getContext('2d');
 const motionPreference=matchMedia('(prefers-reduced-motion: reduce)');
-const lightingScene={index:-1, images:null, shade:0, lamp:1, targetShade:0, targetLamp:1, frame:0, lastTime:0};
+const lightingScene={index:-1, images:null, shade:0, lamp:1, door:0, targetShade:0, targetLamp:1, targetDoor:0, frame:0, lastTime:0};
 
 function traceWindow(points){
   const path=new Path2D();
@@ -600,10 +604,12 @@ function loadRoomBitmaps(index){
     const cssUrl=getComputedStyle(document.documentElement).getPropertyValue(roomPhotos[index].asset).trim();
     image.src=cssUrl.slice(4,-1).trim().replace(/^["']|["']$/g,'');
     await image.decode();
+    const material = createCurtainFabric(index);
     const night=createSceneSurface();
     const ctx=night.getContext('2d',{willReadFrequently:true});
     ctx.drawImage(image,0,0,960,640);
     const pixels=ctx.getImageData(0,0,960,640);
+    const foreground = index === 0 ? extractLivingRoomPlant(pixels.data, 960) : null;
     const mask=createSceneSurface();
     const maskContext=mask.getContext('2d',{willReadFrequently:true});
     const glass=traceWindow(roomWindows[index]);
@@ -623,43 +629,171 @@ function loadRoomBitmaps(index){
       data[i+2]=Math.min(255,b*factor*(1.35-.35*sky)+4*(1-sky));
     }
     ctx.putImageData(pixels,0,0);
-    return {image,night,glass};
+    return {image, night, glass, material, foreground};
   })();
   roomBitmaps.set(index,pending);
   return pending;
 }
 
-function paintCurtains(ctx,index,progress,light){
-  if(progress<=0)return;
-  const window=roomWindows[index];
-  const left=Math.min(...window.map(p=>p[0])),right=Math.max(...window.map(p=>p[0]));
-  const width=(right-left)*progress/2+.25;
-  ctx.save();
-  ctx.scale(2,2);
-  ctx.clip(lightingScene.images.glass,'evenodd');
-  for(const direction of [1,-1]){
-    ctx.save();
-    ctx.translate(direction===1?left:right,0);
-    ctx.scale(direction,1);
-    ctx.beginPath();
-    ctx.rect(0,0,width,320);
-    ctx.clip();
-    ctx.fillStyle='rgb('+[21+light*34,22+light*23,26+light*12].map(Math.round).join(',')+')';
-    ctx.fillRect(0,0,width,320);
-    const pleat=4+progress*4;
-    for(let x=0;x<width;x+=pleat){
-      const fold=ctx.createLinearGradient(x,0,x+pleat,0);
-      fold.addColorStop(0,'rgba(0,0,0,.48)');
-      fold.addColorStop(.36,'rgba(181,159,133,.12)');
-      fold.addColorStop(.68,'rgba(204,188,162,.08)');
-      fold.addColorStop(1,'rgba(0,0,0,.5)');
-      ctx.fillStyle=fold;
-      ctx.fillRect(x,0,pleat,320);
+const curtainBounds = roomWindows.map(outline => {
+  const xs = outline.map(([x]) => x);
+  const ys = outline.map(([, y]) => y);
+  const left = Math.min(...xs);
+  const top = Math.min(...ys);
+  return {left, top, width: Math.max(...xs) - left, height: Math.max(...ys) - top};
+});
+
+// Dark chocolate cloth with soft highlights and a fine, matte weave.
+function createCurtainFabric(index) {
+  const {width, height} = curtainBounds[index];
+  const fabric = document.createElement('canvas');
+  fabric.width = Math.ceil(width * 2);
+  fabric.height = Math.ceil(height * 2);
+  const brush = fabric.getContext('2d');
+  const pixels = brush.createImageData(fabric.width, fabric.height);
+  const folds = Math.round(width / 10);
+  let seed = 417;
+  const threadNoise = () => {
+    seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+    return seed / 4294967296 - .5;
+  };
+  for (let y = 0; y < fabric.height; y++) {
+    const v = y / fabric.height;
+    for (let x = 0; x < fabric.width; x++) {
+      const u = x / fabric.width;
+      const pleat = u * folds;
+      const drape = .12 * Math.sin(pleat * 1.72) + .07 * v * v * Math.sin(pleat * .71);
+      const phase = (pleat + drape) * 2 * Math.PI;
+      const fold = 9 * Math.cos(phase) - 4 * Math.sin(phase * 2);
+      const weave = ((x + y) % 2 ? .65 : -.65) + threadNoise() * 2.6;
+      const hem = 4 * Math.max(0, (v - .94) / .06);
+      const bounce = 6 * Math.cos(u * Math.PI * 2) * (1 - .6 * v);
+      const shade = (1 - .24 * v) * fold + bounce + weave - hem;
+      const pixel = (y * fabric.width + x) * 4;
+      pixels.data[pixel] = 100 + shade;
+      pixels.data[pixel + 1] = 71 + shade;
+      pixels.data[pixel + 2] = 55 + shade;
+      pixels.data[pixel + 3] = 255;
     }
+  }
+  brush.putImageData(pixels, 0, 0);
+  return fabric;
+}
+
+// Keep the living room's arrangement in front of the curtain. Its golden
+// leaves are separated from the cool window within a tight crop.
+function extractLivingRoomPlant(source, stride) {
+  const left = 404, top = 272, width = 142, height = 94;
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext('2d');
+  const plant = ctx.createImageData(width, height);
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const from = ((top + y) * stride + left + x) * 4;
+      const to = (y * width + x) * 4;
+      const r = source[from], g = source[from + 1], b = source[from + 2];
+      const edge = Math.min(1, x / 5, (width - 1 - x) / 5, y / 5, (height - 1 - y) / 5);
+      const alpha = Math.min(1, Math.max(0, (Math.min(r - b, (g - b) * 2) - 12) / 18)) * edge;
+      plant.data[to] = r;
+      plant.data[to + 1] = g;
+      plant.data[to + 2] = b;
+      plant.data[to + 3] = alpha * 255;
+    }
+  }
+  ctx.putImageData(plant, 0, 0);
+  return {canvas, left, top};
+}
+
+function paintCurtains(ctx, index, progress, light) {
+  const {glass, material: fabric} = lightingScene.images;
+  const {left, top, width, height} = curtainBounds[index];
+  const travel = progress * progress * (3 - 2 * progress);
+  const gathered = Math.min(4, width * .034);
+  const panelWidth = gathered + (width / 2 + .4 - gathered) * travel;
+  const right = left + width;
+  const half = fabric.width / 2;
+  const drape = Math.min(2.5, width * .018) * Math.sin(Math.PI * travel);
+  const darkness = .72 * (1 - light) + .18 * (1 - travel) * light;
+
+  ctx.save();
+  ctx.scale(2, 2);
+  ctx.clip(glass, 'evenodd');
+  for (const [edge, direction, source] of [[left, 1, 0], [right, -1, half]]) {
+    ctx.save();
+    ctx.translate(edge, top);
+    ctx.scale(direction, 1);
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(panelWidth, 0);
+    ctx.bezierCurveTo(panelWidth - drape, height * .34, panelWidth - drape * .22, height * .68, panelWidth - drape * .65, height);
+    ctx.lineTo(0, height);
+    ctx.closePath();
+    ctx.clip();
+    ctx.drawImage(fabric, source, 0, half, fabric.height, 0, 0, panelWidth, height);
+    ctx.fillStyle = 'rgba(0, 0, 0,' + darkness + ')';
+    ctx.fillRect(0, 0, panelWidth, height);
     ctx.restore();
   }
   ctx.restore();
 }
+
+// Positions are in the same 480 × 320 frame as the room and window outlines.
+const entryDoor = {x: 218, y: 47, width: 102, height: 175};
+const entryOutside = {x: 158, width: 54};
+
+function paintEntryDoor(ctx, scene) {
+  const {x, y, width, height} = entryDoor;
+  const {image, night} = scene.images;
+  const progress = scene.door;
+  const easing = progress * progress * (3 - 2 * progress);
+  const angle = easing * 1.40;
+  const shrink = Math.cos(angle);
+  const depth = Math.sin(angle);
+  const draw = (asset, sx, sy, sw, sh, dx, dy, dw, dh) => {
+    ctx.drawImage(asset, sx * asset.width / 480, sy * asset.height / 320,
+      sw * asset.width / 480, sh * asset.height / 320, dx, dy, dw, dh);
+  };
+
+  ctx.save();
+  ctx.scale(2, 2);
+  // Reuse the adjacent exterior view so the open doorway matches the same garden.
+  ctx.save();
+  ctx.translate(x + width, 0);
+  ctx.scale(-1, 1);
+  draw(image, entryOutside.x, y, entryOutside.width, height, 0, y, width, height);
+  const recess = ctx.createLinearGradient(0, y, 0, y + height);
+  recess.addColorStop(0, 'rgba(5, 10, 18, .31)');
+  recess.addColorStop(.72, 'rgba(5, 10, 18, .16)');
+  recess.addColorStop(1, 'rgba(5, 10, 18, .38)');
+  ctx.fillStyle = recess;
+  ctx.fillRect(0, y, width, height);
+  ctx.restore();
+
+  // The hinge stays still while the handle edge foreshortens and moves inward.
+  const project = u => x + width * u * shrink / (1 - .12 * u * depth);
+  const leaf = (asset, alpha) => {
+    ctx.globalAlpha = alpha;
+    for (let col = 0; col < width; col += 2) {
+      const u = col / width;
+      const left = project(u);
+      const strip = project((col + 2) / width) - left;
+      const near = 13 * u * depth;
+      draw(asset, x + col, y, 2, height, left, y - near, strip + .4, height + near * 2);
+    }
+    ctx.globalAlpha = 1;
+  };
+  leaf(night, 1);
+  if (scene.lamp) leaf(image, scene.lamp);
+
+  const handleEdge = project(1);
+  const near = 13 * depth;
+  ctx.fillStyle = '#2d1c12';
+  ctx.fillRect(handleEdge, y - near, 3.3 * depth, height + near * 2);
+  ctx.restore();
+}
+
 function paintRoom(){
   const s=lightingScene,c=sceneContext;
   if(!s.images||!c)return;
@@ -670,7 +804,14 @@ function paintRoom(){
     c.drawImage(s.images.image,0,0,960,640);
   }
   c.globalAlpha=1;
+  if (s.door > 0 && s.index === entryRoom) paintEntryDoor(c,s);
   paintCurtains(c,s.index,s.shade,s.lamp);
+  if (s.shade && s.images.foreground && s.lamp) {
+    const {canvas, left, top} = s.images.foreground;
+    c.globalAlpha = s.lamp;
+    c.drawImage(canvas, left, top);
+    c.globalAlpha = 1;
+  }
   if(s.shade){
     c.fillStyle='rgba(6,8,15,'+(s.shade*(.34+.16*(1-s.lamp)))+')';
     c.fillRect(0,0,960,640);
@@ -681,20 +822,23 @@ function animateRoom(time){
   const dt=Math.min(80,s.lastTime?time-s.lastTime:16);
   s.lastTime=time;
   const move=(current,target,step)=>current+Math.sign(target-current)*Math.min(Math.abs(target-current),step);
-  s.shade=move(s.shade,s.targetShade,dt/760);
+  s.shade=move(s.shade,s.targetShade,dt/1250);
   s.lamp=move(s.lamp,s.targetLamp,dt/360);
+  s.door=move(s.door,s.targetDoor,dt/750);
   paintRoom();
-  s.frame=s.shade!==s.targetShade||s.lamp!==s.targetLamp?requestAnimationFrame(animateRoom):0;
+  s.frame=s.shade!==s.targetShade||s.lamp!==s.targetLamp||s.door!==s.targetDoor?requestAnimationFrame(animateRoom):0;
 }
 function updateRoomLighting(index,room){
   const s=lightingScene;
   const changed=index!==s.index;
   const nextShade=room.curtain?0:1;
   const nextLamp=room.light ? 0.1 + 0.9 * room.brightness / 100 : 0;
+  const nextDoor = index === entryRoom && room.door && !room.lock ? 1 : 0;
   roomStage.dataset.lightOn=String(room.light);
-  if(!changed&&s.targetLamp===nextLamp&&s.targetShade===nextShade)return;
+  if(!changed&&s.targetLamp===nextLamp&&s.targetShade===nextShade&&s.targetDoor===nextDoor)return;
   s.targetLamp=nextLamp;
   s.targetShade=nextShade;
+  s.targetDoor=nextDoor;
   if(changed){
     cancelAnimationFrame(s.frame);
     s.frame=0;
@@ -707,6 +851,7 @@ function updateRoomLighting(index,room){
       s.images=images;
       s.lamp=s.targetLamp;
       s.shade=s.targetShade;
+      s.door=s.targetDoor;
       paintRoom();
       roomPhoto.classList.add('rendered');
     }).catch(()=>{roomBitmaps.delete(index);});
@@ -716,6 +861,7 @@ function updateRoomLighting(index,room){
       s.frame=0;
       s.shade=nextShade;
       s.lamp=nextLamp;
+      s.door=nextDoor;
       paintRoom();
     }else if(!s.frame){
       s.lastTime=0;
@@ -724,12 +870,22 @@ function updateRoomLighting(index,room){
   }
 }
 
+// Opening the demo door also unlocks it; locking it always closes it.
+function setRoomDevice(room, key, on) {
+  room[key] = on;
+  if (key === 'door' && on) room.lock = false;
+  if (key === 'lock' && on && Object.hasOwn(room, 'door')) room.door = false;
+}
+
+const doorButton = document.querySelector('[data-quick="door"]');
+const doorLabel = document.querySelector('#quick-door');
 const quickButtons = [...document.querySelectorAll('[data-quick]')];
 quickButtons.forEach(button => button.addEventListener('click', () => {
   const key = button.dataset.quick;
   const room = roomStates[selectedRoom];
-  room[key] = !room[key];
-  manualChange();
+  if (key === 'door' && selectedRoom !== entryRoom) return;
+  setRoomDevice(room, key, !room[key]);
+  manualChange(key === 'door' ? (room.door ? 'Есік ашылды' : 'Есік жабылды') : undefined);
   renderDevices();
 }));
 
@@ -783,11 +939,15 @@ function readouts() {
   roomStage.style.setProperty('--room-light',room.light ? .65 + room.brightness * .004 : .44);
   document.querySelector('#quick-light').textContent=room.light ? room.brightness+'%' : 'Өшірулі';
   document.querySelector('#quick-ac').textContent=room.ac ? room.temperature+' °C' : 'Өшірулі';
-  document.querySelector('#quick-lock').textContent=room.lock ? 'Құлыптаулы' : 'Ашық';
+  document.querySelector('#quick-lock').textContent=room.lock ? 'Құлыптаулы' : 'Құлпы ашық';
+  doorButton.hidden = selectedRoom !== entryRoom;
+  doorLabel.textContent = room.door ? 'Есікті жабу' : 'Есікті ашу';
   roomStage.dataset.curtainClosed=String(!room.curtain);
   updateRoomLighting(selectedRoom,room);
   document.querySelector('#quick-curtain').textContent=room.curtain ? 'Перде ашық' : 'Перде жабық';
-  quickButtons.forEach(button=>button.setAttribute('aria-pressed',room[button.dataset.quick]));
+  quickButtons.forEach(button=>{
+    if (button !== doorButton) button.setAttribute('aria-pressed',room[button.dataset.quick]);
+  });
   const temperature = room.air;
   const watts = energyUse(room);
   document.querySelector('#temperature').textContent = temperature + ' °C';
@@ -867,7 +1027,7 @@ deviceList.addEventListener('click',event => {
   const button=event.target.closest('button');
   if (!button) return;
   const room=roomStates[selectedRoom];
-  if (button.dataset.device) room[button.dataset.device]=!room[button.dataset.device];
+  if (button.dataset.device) setRoomDevice(room, button.dataset.device, !room[button.dataset.device]);
   if (button.dataset.temp) {
     room.temperature=Math.min(30,Math.max(16,room.temperature+Number(button.dataset.temp)));
     room.ac=true;
@@ -896,7 +1056,11 @@ const scenes = {
 };
 sceneButtons.forEach(button => button.addEventListener('click',() => {
   const scene=scenes[button.dataset.scene];
-  roomStates.forEach((room,index)=>{scene.apply(room,index);logRoom(index,scene.name);});
+  roomStates.forEach((room,index)=>{
+    scene.apply(room,index);
+    if (index === entryRoom && room.lock) room.door = false;
+    logRoom(index,scene.name);
+  });
   const sceneRoom={night:1,movie:0};
   selectRoom(sceneRoom[button.dataset.scene] ?? selectedRoom);
   sceneButtons.forEach(item=>item.setAttribute('aria-pressed',item===button));
@@ -909,7 +1073,9 @@ selectRoom(0);
     const saved=await readDatabase();
     saved.forEach(record=>{
       if(!roomStates[record.index] || changedDuringLoad.has(record.index))return;
-      Object.assign(roomStates[record.index],record.state);
+      const savedRoom = roomStates[record.index];
+      Object.assign(savedRoom,record.state);
+      if (record.index === entryRoom && savedRoom.lock) savedRoom.door = false;
       history[record.index]=record.records;
     });
     rooms.forEach((_,index)=>{if(!saved.some(record=>record.index===index) || changedDuringLoad.has(index))saveRoom(index);});
@@ -1093,7 +1259,7 @@ const chatRoomPatterns = [
   new RegExp('қонақ бөлме(?:сі)?'+chatRoomEndings+'|қонақ бөлмесінде(?:гі)?|(?:в )?гостин(?:ая|ой|ую)','gu'),
   new RegExp('(?:ұйықтайтын|жатын) бөлме(?:сі)?'+chatRoomEndings+'|(?:ұйықтайтын|жатын) бөлмесінде(?:гі)?|(?:в )?спальн(?:я|е|ю|и)','gu'),
   /асхана(?:да|ға|дағы|ның|ны)?|ас үй(?:де|ге|дегі|дің|ді)?|(?:на |в )?кухн(?:я|е|ю|и)/gu,
-  /ауыз үй(?:де|ге|дегі|дің|ді)?|кіреберіс(?:те|ке|тегі|тің|ті)?|(?:в )?прихож(?:ая|ей|ую)/gu
+  /ауыз үй(?:де|ге|дегі|дің|ді)?|кіреберіс(?: бөлме(?:сінде(?:гі)?|де(?:гі)?|ге|нің|ні)?|те|ке|тегі|тің|ті)?|(?:в )?прихож(?:ая|ей|ую)/gu
 ];
 
 const chatDeviceNames = {
@@ -1162,6 +1328,9 @@ function parseChat(text, currentRoom) {
       if (!pair.test(command)) continue;
       if (action.type==='power' && device!=='lock' && device!=='curtain') return { kind:'switch', room, device, on:action.value };
       if (action.type==='open' && device==='curtain') return { kind:'switch', room, device, on:action.value };
+      if (action.type==='open' && device==='lock' && room===entryRoom && !/құлп|құлып|замок/u.test(command)) {
+        return { kind:'switch', room, device:'door', on:action.value };
+      }
       if (action.type==='open' && device==='lock') return { kind:'switch', room, device, on:!action.value };
       if (action.type==='lock' && device==='lock') return { kind:'switch', room, device, on:action.value };
     }
@@ -1212,14 +1381,17 @@ function chatReply(text){
   const room=roomStates[command.room];
   if(command.kind==='status'){
     const readings=room.air+' °C · '+room.humidity+'% · '+room.lux+' лк · '+format.format(energyUse(room))+' кВт';
-    const equipment=devices.map(([key,label,,on,off])=>label+' — '+(room[key]?on:off).toLowerCase()).join('\n');
+    const available = command.room === entryRoom ? [...devices, ['door','Есік','door','Ашық','Жабық']] : devices;
+    const equipment=available.map(([key,label,,on,off])=>label+' — '+(room[key]?on:off).toLowerCase()).join('\n');
     return rooms[command.room]+'\n'+readings+'\n'+equipment+'\nАвтоматты басқару '+(room.auto?'қосулы.':'өшірулі.');
   }
   if(command.kind==='switch'){
-    const [key,label,,on,off]=devices.find(([key])=>key===command.device);
+    const [key,label,,on,off] = command.device === 'door'
+      ? ['door','Есік','door','Ашық','Жабық']
+      : devices.find(([key])=>key===command.device);
     selectRoom(command.room);
     if(room[key]!==command.on){
-      room[key]=command.on;
+      setRoomDevice(room,key,command.on);
       manualChange('Чат · '+label+' · '+(room[key]?on:off));
       renderDevices();
     }
