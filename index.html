@@ -657,37 +657,64 @@ automaticToggle.addEventListener('change',()=>{
   renderDevices();
 });
 historySelect.addEventListener('change',renderHistory);
-const cloudConfig={url:'',publishableKey:''};
-const cloudButton=document.querySelector('#iot-cloud');
-const cloudStatus=document.querySelector('#iot-cloud-status');
-cloudButton.disabled=!cloudConfig.url||!cloudConfig.publishableKey;
+const cloudConfig = {"url":"https://fgwlfstijmkxuqkhcseq.supabase.co","publishableKey":"sb_publishable_iGxoOh5lswoMSym3QD5CJA_7kRSpD2L"};
+const cloudButton = document.querySelector('#iot-cloud');
+const cloudStatus = document.querySelector('#iot-cloud-status');
+const cloudReady = Boolean(cloudConfig.url && cloudConfig.publishableKey);
+cloudButton.disabled = !cloudReady;
+if (cloudReady) cloudStatus.textContent = 'Supabase · Сақтауға дайын';
 let cloudClient;
-cloudButton.addEventListener('click',async()=>{
-  cloudButton.disabled=true;
-  cloudStatus.textContent='Бұлтқа сақталып жатыр…';
-  try{
-    if(!cloudClient){
-      const {createClient}=await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
-      cloudClient=createClient(cloudConfig.url,cloudConfig.publishableKey);
+
+cloudButton.addEventListener('click', async () => {
+  if (!cloudReady) return;
+  cloudButton.disabled = true;
+  cloudStatus.textContent = 'Бұлтқа сақталып жатыр…';
+  try {
+    if (!cloudClient) {
+      const {createClient} = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
+      cloudClient = createClient(cloudConfig.url, cloudConfig.publishableKey, {
+        auth: {storageKey: 'smart-home-control-supabase'}
+      });
     }
-    const session=await cloudClient.auth.getSession();
-    if(session.error)throw session.error;
-    if(!session.data.session){
-      const login=await cloudClient.auth.signInAnonymously();
-      if(login.error)throw login.error;
-    }
-    const snapshots=roomStates.map((state,room_index)=>({
-      room_index,room_state:state,records:history[room_index],updated_at:new Date().toISOString()
+    const existing = await cloudClient.auth.getSession();
+    if (existing.error) throw existing.error;
+    const auth = existing.data.session ? existing : await cloudClient.auth.signInAnonymously();
+    if (auth.error) throw auth.error;
+    const owner = auth.data.session?.user?.id;
+    if (!owner) throw Error('Supabase authentication did not return a user');
+
+    const savedAt = new Date().toISOString();
+    const snapshots = roomStates.map((state, roomIndex) => ({
+      owner_id: owner,
+      room_index: roomIndex,
+      room_state: {...state},
+      records: [...history[roomIndex]],
+      updated_at: savedAt
     }));
-    const result=await cloudClient.from('iot_room_snapshots').upsert(snapshots,{onConflict:'owner_id,room_index'}).select('room_index');
-    if(result.error)throw result.error;
-    if(result.data.length!==rooms.length)throw Error('Incomplete save');
-    cloudStatus.textContent='Supabase · 4 бөлме бұлтта сақталды';
-  }catch{
-    cloudStatus.textContent='Бұлтқа сақтау сәтсіз болды · Жергілікті деректер сақталады';
-  }finally{cloudButton.disabled=false;}
+    const table = cloudClient.from('iot_room_snapshots');
+    const saved = await table.upsert(snapshots, {onConflict:'owner_id,room_index'});
+    if (saved.error) throw saved.error;
+
+    const checked = await table.select('room_index,updated_at').eq('owner_id', owner).order('room_index');
+    if (checked.error) throw checked.error;
+    const complete = checked.data.length === snapshots.length && checked.data.every((row, i) =>
+      row.room_index === i && Date.parse(row.updated_at) === Date.parse(savedAt)
+    );
+    if (!complete) throw Error('Supabase read-back did not match the saved snapshot');
+    const time = new Intl.DateTimeFormat('kk-KZ', {
+      hour:'2-digit', minute:'2-digit', second:'2-digit', timeZone:'Asia/Qyzylorda'
+    }).format(new Date(savedAt));
+    cloudStatus.textContent = 'Supabase · ' + checked.data.length + ' бөлме бұлтта сақталды · ' + time;
+  } catch (error) {
+    const authDisabled = error.code === 'anonymous_provider_disabled';
+    cloudStatus.textContent = authDisabled
+      ? 'Supabase жобасында анонимді кіру өшірулі тұр'
+      : 'Бұлтқа сақтау расталмады · Жергілікті деректер сақталады';
+  } finally {
+    cloudButton.disabled = false;
+  }
 });
-if(!cloudButton.disabled)cloudStatus.textContent='Supabase · Сақтауға дайын';
+
 const tabs = document.querySelector('.tabs');
 const panel = document.querySelector('#room-panel');
 const deviceList = document.querySelector('.devices');
