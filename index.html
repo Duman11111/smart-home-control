@@ -110,7 +110,13 @@ footer{padding-bottom:78px}
 @media(max-width:480px){#chat-launch{padding:10px 14px}.chat-head{padding:12px 14px}}
 
 </style>
-</head>
+<style>
+#room-render{display:none;width:100%;height:100%;object-fit:cover;object-position:center var(--room-position,53%);pointer-events:none}
+.room-photo.rendered #room-render{display:block}
+.room-photo.rendered{filter:none}
+.room-photo.rendered::after{display:none}
+.room-stage[data-curtain-closed="true"] .room-photo:not(.rendered){filter:brightness(calc(var(--room-light,.9)*.59))}
+</style></head>
 <body>
 <header><div class="wrap nav">
 <a class="brand" href="#home"><i data-icon="home"></i><span>Smart Home <span>Control</span></span></a>
@@ -143,7 +149,7 @@ footer{padding-bottom:78px}
 <div class="dashboard"><div class="dash-head"><h3>Менің үйім</h3><span class="status"><i class="dot"></i> Демо режимі</span></div>
 <div class="tabs" role="tablist" aria-label="Бөлмелер"></div>
 <div id="room-panel" role="tabpanel" tabindex="0">
-<div class="room-stage"><div class="room-photo" role="img"></div>
+<div class="room-stage"><div class="room-photo" role="img"><canvas id="room-render" width="960" height="640" aria-hidden="true"></canvas></div>
   <div class="room-caption"><div><p>Бөлме күйінің көрнекі демосы</p><h3 id="room-name"></h3></div>
   <div class="room-hotspots" aria-label="Құрылғыларды жылдам басқару">
     <button type="button" data-quick="light" aria-label="Шам"><span data-icon="bulb"></span><span id="quick-light"></span></button>
@@ -439,6 +445,168 @@ function showRoomPhoto(index) {
   roomPhoto.classList.remove('entering');
   requestAnimationFrame(()=>roomPhoto.classList.add('entering'));
 }
+/* Window outlines use the same 480 × 320 coordinates as the reference photos.
+   The lower edges follow furniture silhouettes in front of the glass. */
+const roomWindows = [
+  [[84,93],[374,89],[374,172],[360,174],[359,184],[228,183],[215,177],[113,176],[111,165],[85,170]],
+  [[278,67],[446,46],[446,143],[429,150],[423,160],[409,161],[395,167],[389,183],[301,178],[292,168],[278,167]],
+  [[205,70],[408,62],[411,61],[479,32],[479,183],[451,181],[445,176],[396,174],[377,170],[355,173],[343,174],[343,198],[281,198],[281,166],[250,166],[244,156],[228,156],[225,167],[206,168]],
+  [[143,48],[214,48],[214,222],[145,222],[145,191],[153,187],[154,179],[144,174]]
+];
+const windowCutouts = [
+  [], [],
+  [[[207,89],[228,90],[245,98],[244,106],[236,110],[206,109]]],
+  []
+];
+const roomBitmaps=new Map();
+const sceneCanvas=document.querySelector('#room-render');
+const sceneContext=sceneCanvas.getContext('2d');
+const motionPreference=matchMedia('(prefers-reduced-motion: reduce)');
+const lightingScene={index:-1, images:null, shade:0, lamp:1, targetShade:0, targetLamp:1, frame:0, lastTime:0};
+
+function traceWindow(points){
+  const path=new Path2D();
+  points.forEach(([x,y],i)=>i?path.lineTo(x,y):path.moveTo(x,y));
+  path.closePath();
+  return path;
+}
+function createSceneSurface(){
+  const canvas=document.createElement('canvas');
+  canvas.width=960;
+  canvas.height=640;
+  return canvas;
+}
+function loadRoomBitmaps(index){
+  if(roomBitmaps.has(index))return roomBitmaps.get(index);
+  const pending=(async()=>{
+    const image=new Image();
+    const cssUrl=getComputedStyle(document.documentElement).getPropertyValue(roomPhotos[index].asset).trim();
+    image.src=cssUrl.slice(4,-1).trim().replace(/^["']|["']$/g,'');
+    await image.decode();
+    const night=createSceneSurface();
+    const ctx=night.getContext('2d',{willReadFrequently:true});
+    ctx.drawImage(image,0,0,960,640);
+    const pixels=ctx.getImageData(0,0,960,640);
+    const mask=createSceneSurface();
+    const maskContext=mask.getContext('2d',{willReadFrequently:true});
+    const glass=traceWindow(roomWindows[index]);
+    windowCutouts[index].forEach(shape=>glass.addPath(traceWindow(shape)));
+    maskContext.scale(2,2);
+    maskContext.fill(glass,'evenodd');
+    const coverage=maskContext.getImageData(0,0,960,640).data;
+    for(let i=0;i<pixels.data.length;i+=4){
+      const data=pixels.data;
+      const r=data[i],g=data[i+1],b=data[i+2];
+      const warmth=Math.max(0,Math.min(1,(r-b)/85));
+      const indoors=.25-.17*warmth;
+      const sky=coverage[i+3]/255;
+      const factor=indoors+(.92-indoors)*sky;
+      data[i]=r*factor*(.79+.21*sky);
+      data[i+1]=g*factor;
+      data[i+2]=Math.min(255,b*factor*(1.35-.35*sky)+4*(1-sky));
+    }
+    ctx.putImageData(pixels,0,0);
+    return {image,night,glass};
+  })();
+  roomBitmaps.set(index,pending);
+  return pending;
+}
+
+function paintCurtains(ctx,index,progress,light){
+  if(progress<=0)return;
+  const window=roomWindows[index];
+  const left=Math.min(...window.map(p=>p[0])),right=Math.max(...window.map(p=>p[0]));
+  const width=(right-left)*progress/2+.25;
+  ctx.save();
+  ctx.scale(2,2);
+  ctx.clip(lightingScene.images.glass,'evenodd');
+  for(const direction of [1,-1]){
+    ctx.save();
+    ctx.translate(direction===1?left:right,0);
+    ctx.scale(direction,1);
+    ctx.beginPath();
+    ctx.rect(0,0,width,320);
+    ctx.clip();
+    ctx.fillStyle='rgb('+[21+light*34,22+light*23,26+light*12].map(Math.round).join(',')+')';
+    ctx.fillRect(0,0,width,320);
+    const pleat=4+progress*4;
+    for(let x=0;x<width;x+=pleat){
+      const fold=ctx.createLinearGradient(x,0,x+pleat,0);
+      fold.addColorStop(0,'rgba(0,0,0,.48)');
+      fold.addColorStop(.36,'rgba(181,159,133,.12)');
+      fold.addColorStop(.68,'rgba(204,188,162,.08)');
+      fold.addColorStop(1,'rgba(0,0,0,.5)');
+      ctx.fillStyle=fold;
+      ctx.fillRect(x,0,pleat,320);
+    }
+    ctx.restore();
+  }
+  ctx.restore();
+}
+function paintRoom(){
+  const s=lightingScene,c=sceneContext;
+  if(!s.images||!c)return;
+  c.globalAlpha=1;
+  c.drawImage(s.images.night,0,0);
+  if(s.lamp>0){
+    c.globalAlpha=s.lamp;
+    c.drawImage(s.images.image,0,0,960,640);
+  }
+  c.globalAlpha=1;
+  paintCurtains(c,s.index,s.shade,s.lamp);
+  if(s.shade){
+    c.fillStyle='rgba(6,8,15,'+(s.shade*(.34+.16*(1-s.lamp)))+')';
+    c.fillRect(0,0,960,640);
+  }
+}
+function animateRoom(time){
+  const s=lightingScene;
+  const dt=Math.min(80,s.lastTime?time-s.lastTime:16);
+  s.lastTime=time;
+  const move=(current,target,step)=>current+Math.sign(target-current)*Math.min(Math.abs(target-current),step);
+  s.shade=move(s.shade,s.targetShade,dt/760);
+  s.lamp=move(s.lamp,s.targetLamp,dt/360);
+  paintRoom();
+  s.frame=s.shade!==s.targetShade||s.lamp!==s.targetLamp?requestAnimationFrame(animateRoom):0;
+}
+function updateRoomLighting(index,room){
+  const s=lightingScene;
+  const changed=index!==s.index;
+  const nextShade=room.curtain?0:1;
+  const nextLamp=room.light ? 0.1 + 0.9 * room.brightness / 100 : 0;
+  roomStage.dataset.lightOn=String(room.light);
+  if(!changed&&s.targetLamp===nextLamp&&s.targetShade===nextShade)return;
+  s.targetLamp=nextLamp;
+  s.targetShade=nextShade;
+  if(changed){
+    cancelAnimationFrame(s.frame);
+    s.frame=0;
+    s.index=index;
+    s.images=null;
+    roomPhoto.classList.remove('rendered');
+    if(!sceneContext)return;
+    loadRoomBitmaps(index).then(images=>{
+      if(s.index!==index)return;
+      s.images=images;
+      s.lamp=s.targetLamp;
+      s.shade=s.targetShade;
+      paintRoom();
+      roomPhoto.classList.add('rendered');
+    }).catch(()=>{roomBitmaps.delete(index);});
+  }else if(s.images){
+    if(motionPreference.matches){
+      cancelAnimationFrame(s.frame);
+      s.frame=0;
+      s.shade=nextShade;
+      s.lamp=nextLamp;
+      paintRoom();
+    }else if(!s.frame){
+      s.lastTime=0;
+      s.frame=requestAnimationFrame(animateRoom);
+    }
+  }
+}
+
 const quickButtons = [...document.querySelectorAll('[data-quick]')];
 quickButtons.forEach(button => button.addEventListener('click', () => {
   const key = button.dataset.quick;
@@ -500,6 +668,7 @@ function readouts() {
   document.querySelector('#quick-ac').textContent=room.ac ? room.temperature+' °C' : 'Өшірулі';
   document.querySelector('#quick-lock').textContent=room.lock ? 'Құлыптаулы' : 'Ашық';
   roomStage.dataset.curtainClosed=String(!room.curtain);
+  updateRoomLighting(selectedRoom,room);
   document.querySelector('#quick-curtain').textContent=room.curtain ? 'Перде ашық' : 'Перде жабық';
   quickButtons.forEach(button=>button.setAttribute('aria-pressed',room[button.dataset.quick]));
   const temperature = room.air;
