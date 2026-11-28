@@ -7,9 +7,9 @@ import { rooms, entryRoom, roomStates, scenes, appState, applyRules } from './st
 const SCHEDULE_KEY = 'smart-home-control-schedules';
 
 const defaultSchedules = [
-  { id: 'morning-wake', time: '07:00', action: 'morning', label: 'Таңғы ояну (перделерді ашу, шамды өшіру)', enabled: true },
-  { id: 'evening-light', time: '19:30', action: 'evening', label: 'Кешкі жайлылық (қонақ пен асхана шамын қосу)', enabled: true },
-  { id: 'night-mode', time: '23:00', action: 'night', label: 'Түнгі режим (есікті құлыптау, жарықты 15% ету)', enabled: true }
+  { id: 'morning-wake', time: '07:00', action: 'morning', label: 'Таңғы ояну', enabled: true },
+  { id: 'evening-light', time: '19:30', action: 'evening', label: 'Кешкі жарық', enabled: true },
+  { id: 'night-mode', time: '23:00', action: 'night', label: 'Түнгі режим', enabled: true }
 ];
 
 let audioCtx;
@@ -166,8 +166,8 @@ export function initSmartFeatures({ logAndRefresh, renderDevices, selectRoom, tr
     const room = roomStates[appState.selectedRoom];
     const smokeDanger = room.smoke >= 50;
     smokeValue.textContent = Math.round(room.smoke) + ' ppm';
-    waterValue.textContent = room.waterLeak ? 'Су ағу бар!' : 'Құрғақ (Қалыпты)';
-    motionValue.textContent = room.motion ? 'Қозғалыс бар!' : (appState.awayArmed ? 'Күзетте (Тыныш)' : 'Тыныш');
+    waterValue.textContent = room.waterLeak ? 'Су ағу!' : 'Құрғақ';
+    motionValue.textContent = room.motion ? 'Қозғалыс!' : (appState.awayArmed ? 'Күзетте' : 'Тыныш');
 
     smokeCard.classList.toggle('danger', smokeDanger);
     waterCard.classList.toggle('danger', Boolean(room.waterLeak));
@@ -225,15 +225,15 @@ export function initSmartFeatures({ logAndRefresh, renderDevices, selectRoom, tr
       liveInterval = 0;
     }
     liveToggleBtn.setAttribute('aria-pressed', String(liveRunning));
-    liveToggleBtn.textContent = liveRunning ? 'Симуляцияны тоқтату' : 'Тірі симуляцияны қосу';
+    liveToggleBtn.textContent = liveRunning ? 'Тоқтату' : 'Қосу';
     liveBadge.dataset.active = String(liveRunning);
-    liveBadge.querySelector('span').textContent = liveRunning ? 'Тірі IoT желіде' : 'Демо режимі';
+    liveBadge.querySelector('span').textContent = liveRunning ? 'Тірі IoT' : 'Демо';
     if (liveRunning) {
       const ms = Number(liveSpeedSelect.value) || 3500;
       stepLiveSimulation();
       liveInterval = window.setInterval(stepLiveSimulation, ms);
     } else {
-      liveStatusText.textContent = 'Тірі симуляция уақытша тоқтатылған.';
+      liveStatusText.textContent = 'Өшірулі';
     }
   }
 
@@ -387,11 +387,11 @@ export function initSmartFeatures({ logAndRefresh, renderDevices, selectRoom, tr
   }
 
   const actionLabels = {
-    morning: 'Таңғы ояну (перделерді ашу, шамды өшіру)',
-    evening: 'Кешкі жайлылық (қонақ пен асхана шамын қосу)',
-    night: 'Түнгі режим сценарийі',
-    away: 'Үйден шығу сценарийі',
-    movie: 'Кино сценарийі'
+    morning: 'Таңғы ояну',
+    evening: 'Кешкі жарық',
+    night: 'Түнгі режим',
+    away: 'Үйден шығу',
+    movie: 'Кино'
   };
 
   scheduleForm.addEventListener('submit', event => {

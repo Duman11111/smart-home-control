@@ -329,29 +329,29 @@ function renderDevices(toggledKey) {
     if (vizLabel) {
       if (key === 'light') {
         card.style.setProperty('--lamp-alpha', (0.25 + 0.75 * room.brightness / 100).toFixed(2));
-        vizLabel.textContent = active ? `Жанып тұр · ${room.brightness}%` : 'Сөніп тұр';
+        vizLabel.textContent = active ? `${room.brightness}%` : 'Өшірулі';
       } else if (key === 'tv') {
         const chFull = tvChannels[(room.tvChannel || 0) % tvChannels.length];
         const chShort = chFull.split(' (')[0];
-        vizLabel.textContent = active ? `Эфирде · ${chFull}` : 'Күту режимі (Standby)';
+        vizLabel.textContent = active ? chShort : 'Standby';
         card.querySelector('.tv-ch-name').textContent = chShort;
       } else if (key === 'curtain') {
         const pct = typeof room.curtainLevel === 'number' ? room.curtainLevel : (active ? 100 : 0);
-        vizLabel.textContent = pct === 0 ? 'Перде толық жабық' : pct === 100 ? 'Терезе толық ашық' : `Жартылай ашық · ${pct}%`;
+        vizLabel.textContent = pct === 0 ? 'Жабық' : pct === 100 ? 'Ашық' : `${pct}%`;
         card.style.setProperty('--curtain-open', (pct / 100).toFixed(3));
         card.querySelectorAll('[data-curtain-pct]').forEach(btn => {
           btn.classList.toggle('is-active', Number(btn.dataset.curtainPct) === pct);
         });
       } else if (key === 'ac') {
-        vizLabel.textContent = active ? `Салқындату · ${room.temperature} °C` : 'Тоқтап тұр';
+        vizLabel.textContent = active ? `${room.temperature} °C` : 'Өшірулі';
       } else if (key === 'heater') {
-        vizLabel.textContent = active ? 'Жылу толқыны қосулы' : 'Салқын күйде';
+        vizLabel.textContent = active ? 'Жылыту' : 'Өшірулі';
       } else if (key === 'camera') {
-        vizLabel.textContent = active ? 'REC · Тікелей жазба' : 'Камера өшірулі';
+        vizLabel.textContent = active ? 'REC · Жазба' : 'Өшірулі';
       } else if (key === 'lock') {
-        vizLabel.textContent = active ? 'Қауіпсіз құлыптаулы' : 'Құлып ашық';
+        vizLabel.textContent = active ? 'Құлыптаулы' : 'Ашық';
       } else if (key === 'socket') {
-        vizLabel.textContent = active ? '220В · Қуат берілуде' : 'Ток ажыратылған';
+        vizLabel.textContent = active ? '220В · Қосулы' : 'Өшірулі';
       }
     }
   });
@@ -850,3 +850,34 @@ for (const control of tracedControls) {
   control.dataset.buttonTrace = '';
   traceObserver?.observe(control);
 }
+
+// Segmented Dashboard Sub-Tabs (Devices / Automation / Safety / Monitoring)
+const dashTabs = [...document.querySelectorAll('[data-dash-tab]')];
+const dashPanes = [...document.querySelectorAll('[data-dash-pane]')];
+function selectDashTab(name) {
+  dashTabs.forEach(btn => btn.setAttribute('aria-selected', String(btn.dataset.dashTab === name)));
+  dashPanes.forEach(pane => { pane.hidden = pane.dataset.dashPane !== name; });
+}
+dashTabs.forEach(btn => btn.addEventListener('click', () => selectDashTab(btn.dataset.dashTab)));
+
+// Light / Dark Theme Switcher
+const THEME_KEY = 'smart-home-control-theme';
+const themeBtn = document.querySelector('#theme-toggle');
+function applyTheme(theme) {
+  const isLight = theme === 'light';
+  document.documentElement.dataset.theme = isLight ? 'light' : 'dark';
+  if (themeBtn) {
+    themeBtn.textContent = isLight ? '🌙' : '☀️';
+    themeBtn.title = isLight ? 'Қараңғы тақырып' : 'Жарық тақырып';
+  }
+}
+try {
+  applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
+} catch {
+  applyTheme('dark');
+}
+themeBtn?.addEventListener('click', () => {
+  const next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+  applyTheme(next);
+  try { localStorage.setItem(THEME_KEY, next); } catch {}
+});

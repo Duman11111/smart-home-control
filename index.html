@@ -12,13 +12,22 @@
 <body>
 <header><div class="wrap nav">
 <a class="brand" href="#home"><i data-icon="home"></i><span>Smart Home <span>Control</span></span></a>
-<nav class="navlinks" id="navigation" aria-label="Негізгі навигация"><a href="#features">Мүмкіндіктер</a><a href="#demo">Демо</a><a href="#how">Қалай жұмыс істейді?</a><a href="#pricing">Бағалар</a></nav>
-<a class="btn primary" href="#demo">Демоны ашу</a>
-<button class="btn menu" aria-controls="navigation" aria-expanded="false"><span data-icon="menu"></span> Мәзір</button>
+<nav class="navlinks" id="navigation" aria-label="Негізгі навигация">
+  <a href="#home">Басты</a>
+  <a href="#demo">Демо</a>
+  <a href="#features">Мүмкіндіктер</a>
+  <a href="#how">Қалай істейді</a>
+  <a href="#pricing">Бағалар</a>
+  <a href="#faq">FAQ</a>
+  <a href="#contact">Байланыс</a>
+  <a href="#requests">Өтінімдер</a>
+</nav>
+<div class="nav-actions">
+  <button type="button" class="btn theme-btn" id="theme-toggle" aria-label="Жарық немесе қараңғы тақырып" title="Тақырыпты ауыстыру">☀️</button>
+  <a class="btn primary" href="#demo">Демоны ашу</a>
+  <button class="btn menu" aria-controls="navigation" aria-expanded="false"><span data-icon="menu"></span> Мәзір</button>
+</div>
 </div></header>
-<nav class="viewbar" aria-label="Сайт бөлімдері"><div class="wrap">
-<a href="#home">Басты бет</a><a href="#features">Мүмкіндіктер</a><a href="#demo">Демо</a><a href="#how">Қалай жұмыс істейді?</a><a href="#compatibility">Үйлесімділік</a><a href="#pricing">Бағалар</a><a href="#reviews">Пікірлер</a><a href="#faq">FAQ</a><a href="#contact">Байланыс</a><a href="#requests">Өтінімдер</a>
-</div></nav>
 <main>
 <section id="home" class="hero wrap" aria-labelledby="hero-title">
 <div class="hero-stage">
@@ -26,20 +35,20 @@
 <button class="house-film-control" type="button" hidden><span>Бейнені тоқтату</span></button>
 <div class="hero-copy"><span class="eyebrow"><i class="dot"></i> Ақылды үйді басқару</span>
 <h1 id="hero-title">Үйіңізді бір жерден <span class="gradient">басқарыңыз.</span></h1>
-<p>Жарық, климат және қауіпсіздік. Үйдегі барлық құрылғы бір панельде, басқару өз қолыңызда.</p>
-<div class="actions"><a class="btn primary" href="#demo">Бастау</a><a class="btn" href="#demo"><span data-icon="play"></span> Демо көру</a></div></div>
+<p>Жарық, климат және қауіпсіздік — бәрі бір панельде.</p>
+<div class="actions"><a class="btn primary" href="#demo">Бастау</a><a class="btn" href="#features"><span data-icon="play"></span> Мүмкіндіктер</a></div></div>
 <div class="hero-status"><i class="dot"></i> Демо үй желіде</div>
 </div>
 <div class="hero-links" aria-label="Жылдам кіру">
-<a class="hero-link" href="#demo"><span data-icon="home"></span><span><strong>Басқару панелі</strong><small>4 бөлме · 8 құрылғы түрі</small></span></a>
-<a class="hero-link" href="#features"><span data-icon="bulb"></span><span><strong>Мүмкіндіктер</strong><small>Жарық, климат, қауіпсіздік</small></span></a>
-<a class="hero-link" href="#how"><span data-icon="spark"></span><span><strong>Қалай жұмыс істейді?</strong><small>Үш қарапайым қадам</small></span></a>
-</div><div class="brands" aria-label="Үйлесімділік мысалдары"><span>Үйлесімділік мысалдары</span><strong>Matter</strong><strong>Philips Hue</strong><strong>Aqara</strong><strong>Google Home</strong><strong>Apple Home</strong></div>
+<a class="hero-link" href="#demo"><span data-icon="home"></span><span><strong>Басқару панелі</strong><small>4 бөлме · 8 құрылғы</small></span></a>
+<a class="hero-link" href="#features"><span data-icon="bulb"></span><span><strong>Мүмкіндіктер</strong><small>Жарық, климат, күзет</small></span></a>
+<a class="hero-link" href="#how"><span data-icon="spark"></span><span><strong>Қалай істейді</strong><small>3 қадам</small></span></a>
+</div><div class="brands" aria-label="Үйлесімділік мысалдары"><span>Үйлесімді:</span><strong>Matter</strong><strong>Philips Hue</strong><strong>Aqara</strong><strong>Google Home</strong><strong>Apple Home</strong></div>
 </section>
 
-<section class="block wrap" id="features"><div class="section-head reveal"><span class="eyebrow">Мүмкіндіктер</span><h2>Үйіңіз сіздің ырғағыңызға бейімделеді</h2><p>Күнделікті әрекеттерді бір панельден басқарыңыз.</p></div><div class="grid" id="feature-list"></div><div class="actions"><a class="btn primary" href="#demo">Құрылғыларды сынап көру</a></div></section>
+<section class="block wrap" id="features"><div class="section-head reveal"><span class="eyebrow">Мүмкіндіктер</span><h2>Негізгі мүмкіндіктер</h2></div><div class="grid" id="feature-list"></div><div class="actions"><a class="btn primary" href="#demo">Демоны ашу</a></div></section>
 
-<section class="block" id="demo"><div class="wrap"><div class="section-head reveal"><span class="eyebrow">Интерактивті демо</span><h2>Ақылды үйді <span class="gradient">сынап көріңіз</span></h2><p>Бөлме таңдаңыз, құрылғыларды басқарыңыз немесе дайын сценарийді іске қосыңыз.</p></div>
+<section class="block demo-studio" id="demo"><div class="wrap">
 <div class="dashboard">
 <div class="emergency-banner" id="emergency-banner" role="alert" hidden>
   <div class="emergency-banner-copy">
@@ -51,20 +60,31 @@
   </div>
   <div class="safety-actions">
     <button type="button" class="btn" id="emergency-mute">Дыбысты өшіру</button>
-    <button type="button" class="btn btn-danger" id="emergency-reset">Дабылды өшіріп, қалпына келтіру</button>
+    <button type="button" class="btn btn-danger" id="emergency-reset">Дабылды тоқтату</button>
   </div>
 </div>
 <div class="dash-head"><h3>Менің үйім</h3><div class="dash-head-right"><span class="live-badge" id="live-badge" data-active="false"><i class="dot"></i> <span>Демо режимі</span></span></div></div>
-<div class="tabs" role="tablist" aria-label="Бөлмелер"></div>
+<div class="dash-toolbar">
+  <div class="tabs" role="tablist" aria-label="Бөлмелер"></div>
+  <div class="scenes" aria-label="Сценарийлер"><button data-scene="away" aria-pressed="false"><span data-icon="door"></span> Үйден шығу</button><button data-scene="night" aria-pressed="false"><span data-icon="moon"></span> Түнгі режим</button><button data-scene="movie" aria-pressed="false"><span data-icon="play"></span> Кино</button></div>
+</div>
+<p class="scene-status" role="status"></p>
 <div id="room-panel" role="tabpanel" tabindex="0">
 <div class="room-stage"><div class="room-photo" role="img"><canvas id="room-render" width="960" height="640" aria-hidden="true"></canvas></div>
-  <div class="room-fx-badges" aria-live="polite">
-    <span class="fx-pill" id="fx-light"><i class="fx-dot"></i> Шам: <b>75%</b></span>
-    <span class="fx-pill" id="fx-tv"><i class="fx-dot"></i> ТВ: <b>Қосулы</b></span>
-    <span class="fx-pill" id="fx-curtain"><i class="fx-dot"></i> Перде: <b>Ашық (100%)</b></span>
+  <div class="room-top-bar">
+    <div class="room-fx-badges" aria-live="polite">
+      <span class="fx-pill" id="fx-light"><i class="fx-dot"></i> Шам: <b>75%</b></span>
+      <span class="fx-pill" id="fx-tv"><i class="fx-dot"></i> ТВ: <b>Қосулы</b></span>
+      <span class="fx-pill" id="fx-curtain"><i class="fx-dot"></i> Перде: <b>Ашық (100%)</b></span>
+    </div>
+    <div class="room-metrics-hud" aria-label="Бөлме көрсеткіштері">
+      <div class="hud-item"><span>Температура</span><strong id="temperature"></strong></div>
+      <div class="hud-item"><span>Ылғал</span><strong id="humidity"></strong></div>
+      <div class="hud-item"><span>Қуат</span><strong id="energy"></strong></div>
+    </div>
   </div>
   <div class="room-toast" id="room-toast" role="status" hidden></div>
-  <div class="room-caption"><div><p>Бөлме күйінің көрнекі демосы</p><h3 id="room-name"></h3><p id="door-lock-note" hidden>Есікті ашу үшін «Есік құлпы» түймесін өшіріңіз.</p></div>
+  <div class="room-caption"><div><h3 id="room-name"></h3><p id="door-lock-note" hidden>Алдымен құлыпты ашыңыз.</p></div>
   <div class="room-hotspots" aria-label="Құрылғыларды жылдам басқару">
     <button type="button" data-quick="light" aria-label="Шам"><span data-icon="bulb"></span><span id="quick-light"></span></button>
     <button type="button" data-quick="tv" aria-label="Теледидар"><span data-icon="tv"></span><span id="quick-tv"></span></button>
@@ -74,44 +94,55 @@
     <button type="button" data-quick="door" hidden><span data-icon="door"></span><span id="quick-door">Есікті ашу</span></button>
   </div></div>
 </div>
-<div class="metrics"><div class="metric"><span>Температура</span><strong id="temperature"></strong></div><div class="metric"><span>Ылғалдылық</span><strong id="humidity"></strong></div><div class="metric"><span>Қуат</span><strong id="energy"></strong></div></div>
+
+<div class="dash-segments" role="tablist" aria-label="Панель бөлімдері">
+  <button type="button" role="tab" data-dash-tab="devices" aria-selected="true"><span data-icon="bulb"></span> Құрылғылар</button>
+  <button type="button" role="tab" data-dash-tab="automation" aria-selected="false"><span data-icon="clock"></span> Автоматтандыру</button>
+  <button type="button" role="tab" data-dash-tab="safety" aria-selected="false"><span data-icon="shield"></span> Қауіпсіздік</button>
+  <button type="button" role="tab" data-dash-tab="monitoring" aria-selected="false"><span data-icon="activity"></span> Мониторинг</button>
+</div>
+
+<div class="dash-pane" data-dash-pane="devices">
 <div class="dash-grid"><div class="devices"></div><aside><div class="chart"><div class="chart-head"><h3>Қуат тарихы</h3><span id="power-samples"></span></div>
 <svg viewBox="0 0 260 105" role="img" aria-label="Бөлменің соңғы қуат өлшемдері, кВт"><defs><linearGradient id="fill" x2="0" y2="1"><stop stop-color="#eaba82" stop-opacity=".43"/><stop offset="1" stop-color="#eaba82" stop-opacity="0"/></linearGradient></defs><path d="M0 25H260M0 55H260M0 85H260" stroke="#273953"/><path id="chart-fill" fill="url(#fill)"/><path id="chart-line" fill="none" stroke="#edbb80" stroke-width="2.5" stroke-linejoin="round"/><circle id="power-last" r="3.5" fill="#ffe5be" visibility="hidden"/></svg>
-<div class="chart-labels" id="power-times"></div><p id="power-range" class="power-range"></p></div><div class="chart"><h3>Үй жоспары</h3><div class="floor" aria-label="Картадан бөлме таңдау"></div></div></aside></div></div>
+<div class="chart-labels" id="power-times"></div><p id="power-range" class="power-range"></p></div><div class="chart"><h3>Үй жоспары</h3><div class="floor" aria-label="Картадан бөлме таңдау"></div></div></aside></div>
+</div></div>
+
+<div class="dash-pane" data-dash-pane="automation" hidden>
 <div class="smart-modules">
   <!-- 1. Live IoT Simulator -->
   <section class="module-card" aria-labelledby="mod-sim-title">
     <div class="module-head">
-      <h3 id="mod-sim-title"><span data-icon="activity"></span> Тірі IoT симуляциясы</h3>
+      <h3 id="mod-sim-title"><span data-icon="activity"></span> Тірі симуляция</h3>
     </div>
-    <p class="status-note">Датчиктерді нақты уақытта автоматты өзгертіп, кондиционер мен жылытқыштың физикалық әсерін модельдейді.</p>
+    <p class="status-note">Датчиктер өздігінен өзгеріп тұрады.</p>
     <div class="module-controls">
-      <button type="button" class="btn primary" id="live-sim-toggle" aria-pressed="false">Тірі симуляцияны қосу</button>
-      <label class="status-note">Жылдамдық
+      <button type="button" class="btn primary" id="live-sim-toggle" aria-pressed="false">Қосу</button>
+      <label class="status-note inline-label">Жиілігі
         <select id="live-sim-speed" aria-label="Симуляция жиілігі">
-          <option value="4000">Қалыпты (4 сек)</option>
-          <option value="2000">Жылдам (2 сек)</option>
-          <option value="1000">Турбо (1 сек)</option>
+          <option value="4000">4 сек</option>
+          <option value="2000">2 сек</option>
+          <option value="1000">1 сек</option>
         </select>
       </label>
     </div>
-    <p id="live-sim-status" class="status-note" role="status">Тірі симуляция уақытша тоқтатылған.</p>
+    <p id="live-sim-status" class="status-note" role="status">Өшірулі</p>
   </section>
 
   <!-- 4. Scheduled Automation & Virtual Clock -->
   <section class="module-card" aria-labelledby="mod-clock-title">
     <div class="module-head">
-      <h3 id="mod-clock-title"><span data-icon="clock"></span> Кесте және үй сағаты</h3>
+      <h3 id="mod-clock-title"><span data-icon="clock"></span> Кесте</h3>
       <span class="clock-display" id="virtual-clock">12:00</span>
     </div>
     <div class="module-controls">
       <select id="clock-speed" aria-label="Сағат жылдамдығы">
         <option value="0">Нақты уақыт</option>
-        <option value="1">1 сек = +1 мин</option>
-        <option value="10">1 сек = +10 мин</option>
-        <option value="30">1 сек = +30 мин</option>
+        <option value="1">×60</option>
+        <option value="10">×600</option>
+        <option value="30">×1800</option>
       </select>
-      <button type="button" class="btn" id="clock-jump-btn">Келесі кестеге өту ⏭</button>
+      <button type="button" class="btn" id="clock-jump-btn">Келесіге ⏭</button>
     </div>
     <form id="schedule-form" class="module-controls">
       <input type="time" name="time" value="07:30" required aria-label="Уақыты">
@@ -127,72 +158,77 @@
     <div class="schedule-list" id="schedule-list"></div>
     <p id="schedule-status" class="status-note" role="status"></p>
   </section>
+</div>
+</div>
 
+<div class="dash-pane" data-dash-pane="safety" hidden>
   <!-- 3. Emergency Safety & Alarm Sensors -->
   <section class="module-card wide-card" aria-labelledby="mod-safety-title">
     <div class="module-head">
-      <h3 id="mod-safety-title"><span data-icon="shield"></span> Қауіпсіздік және апаттық датчиктер</h3>
-      <span class="status-note" id="safety-status">Барлық қауіпсіздік датчиктері қалыпты күйде.</span>
+      <h3 id="mod-safety-title"><span data-icon="shield"></span> Қауіпсіздік</h3>
+      <span class="status-note" id="safety-status">Бәрі қалыпты</span>
     </div>
     <div class="safety-grid">
       <div class="safety-sensor" id="safety-smoke-card">
-        <div class="safety-sensor-top"><span>Түтін / Газ (CO)</span><span>Шегі: 50 ppm</span></div>
+        <div class="safety-sensor-top"><span>Түтін / газ</span><small>шегі 50</small></div>
         <strong id="safety-smoke-val">8 ppm</strong>
       </div>
       <div class="safety-sensor" id="safety-water-card">
-        <div class="safety-sensor-top"><span>Су ағу датчигі</span><span>Асхана / Құбыр</span></div>
-        <strong id="safety-water-val">Құрғақ (Қалыпты)</strong>
+        <div class="safety-sensor-top"><span>Су ағу</span><small>асхана</small></div>
+        <strong id="safety-water-val">Құрғақ</strong>
       </div>
       <div class="safety-sensor" id="safety-motion-card">
-        <div class="safety-sensor-top"><span>Қозғалыс (Күзет)</span><span>Кіреберіс</span></div>
+        <div class="safety-sensor-top"><span>Қозғалыс</span><small>кіреберіс</small></div>
         <strong id="safety-motion-val">Тыныш</strong>
       </div>
     </div>
     <div class="safety-actions">
-      <button type="button" class="btn" id="sim-smoke-btn">🔥 Түтін/Газ тесті (Асхана)</button>
-      <button type="button" class="btn" id="sim-water-btn">💧 Су ағу тесті (Асхана)</button>
-      <button type="button" class="btn" id="sim-motion-btn">🚶 Қозғалыс тесті (Кіреберіс)</button>
+      <button type="button" class="btn" id="sim-smoke-btn">🔥 Түтін тесті</button>
+      <button type="button" class="btn" id="sim-water-btn">💧 Су тесті</button>
+      <button type="button" class="btn" id="sim-motion-btn">🚶 Қозғалыс тесті</button>
     </div>
   </section>
 </div>
 
+<div class="dash-pane" data-dash-pane="monitoring" hidden>
 <div class="iot" id="iot-monitor">
-<h3>Виртуалды датчиктер және мониторинг</h3><p>Мәндерді таңдалған бөлме үшін өзгертіңіз.</p>
+<h3>Датчиктер және мониторинг</h3>
 <form id="sensor-form"><div class="sensor-grid">
 <label>Температура, °C<input name="air" type="number" min="0" max="60" step="0.1" required></label>
 <label>Ылғалдылық, %<input name="humidity" type="number" min="0" max="100" required></label>
 <label>Жарық, лк<input name="lux" type="number" min="0" max="2000" required></label>
-</div><button class="btn primary" type="submit">Көрсеткіштерді қолдану</button></form>
+</div><button class="btn primary" type="submit">Қолдану</button></form>
 <label><input id="iot-auto" type="checkbox"> Автоматты басқару</label>
-<p>Температура 28 °C-тан бастап кондиционерді, 18 °C-қа дейін жылытқышты қосады. 100 лк-ден төменде шам жанады. Ылғалдылық 70%-дан бастап ескерту шығады.</p>
+<p class="status-note">≥28 °C → кондиционер · ≤18 °C → жылытқыш · &lt;100 лк → шам</p>
 <p class="iot-alert" role="status" id="iot-alert"></p><p id="iot-storage" role="status"></p>
 <div class="iot-actions">
-  <button type="button" id="iot-cloud" class="btn primary"><span data-icon="cloud"></span> Бұлтқа сақтау</button>
-  <button type="button" id="iot-cloud-load" class="btn">Бұлттан жүктеу</button>
-  <button type="button" id="iot-pdf" class="btn">PDF жүктеу</button>
+  <button type="button" id="iot-cloud" class="btn primary"><span data-icon="cloud"></span> Сақтау</button>
+  <button type="button" id="iot-cloud-load" class="btn">Жүктеу</button>
+  <button type="button" id="iot-pdf" class="btn">PDF</button>
 </div>
 <p id="iot-cloud-status" role="status">Supabase жобасы бапталмаған</p>
 <details class="cloud-settings">
-  <summary>Supabase бұлттық баптаулары (URL және Key)</summary>
+  <summary>Supabase баптауы</summary>
   <form id="cloud-config-form">
     <div class="cloud-settings-grid">
       <label>Project URL<input type="url" name="url" placeholder="https://xyz.supabase.co" required></label>
-      <label>Publishable / Anon Key<input type="text" name="key" placeholder="eyJ... немесе sb_publishable_..." required></label>
+      <label>Anon Key<input type="text" name="key" placeholder="sb_publishable_…" required></label>
     </div>
     <div class="iot-actions">
-      <button type="submit" class="btn primary">Баптауды сақтау</button>
-      <button type="button" id="cloud-config-reset" class="btn">Әдепкі мәнге қайтару</button>
+      <button type="submit" class="btn primary">Сақтау</button>
+      <button type="button" id="cloud-config-reset" class="btn">Әдепкі</button>
     </div>
   </form>
 </details>
 <p id="iot-pdf-status" role="status"></p>
-<label>Тарих графигі<select id="iot-series"><option value="air">Температура, °C</option><option value="humidity">Ылғалдылық, %</option><option value="lux">Жарық, лк</option><option value="power">Қуат, кВт</option></select></label>
+<label class="inline-label">График<select id="iot-series"><option value="air">Температура, °C</option><option value="humidity">Ылғалдылық, %</option><option value="lux">Жарық, лк</option><option value="power">Қуат, кВт</option></select></label>
 <p id="iot-scale"></p><svg viewBox="0 0 500 130" role="img" aria-label="Таңдалған көрсеткіштің тарихы" preserveAspectRatio="none"><path d="M0 20H500M0 65H500M0 110H500" stroke="#65503d"/><polyline id="iot-chart" fill="none" stroke="#efbf85" stroke-width="3" vector-effect="non-scaling-stroke"/></svg>
 <div class="iot-history"><table><thead><tr><th>Уақыт</th><th>°C</th><th>%</th><th>лк</th><th>кВт</th><th>Әрекет</th></tr></thead><tbody id="iot-history"></tbody></table></div>
-</div><div class="scenes" aria-label="Сценарийлер"><button data-scene="away" aria-pressed="false"><span data-icon="door"></span> Үйден шығу</button><button data-scene="night" aria-pressed="false"><span data-icon="moon"></span> Түнгі режим</button><button data-scene="movie" aria-pressed="false"><span data-icon="play"></span> Кино</button></div><p class="scene-status" role="status"></p>
+</div>
+</div>
 </div></div></section>
 
-<section class="block wrap" id="how"><div class="section-head reveal"><span class="eyebrow">Қалай жұмыс істейді?</span><h2>Үш қадамда дайын</h2></div><div class="grid steps">
+<section class="block wrap" id="how"><div class="section-head reveal"><span class="eyebrow">Қалай істейді</span><h2>Үш қадамда дайын</h2></div><div class="grid steps">
 <article class="card reveal"><span class="tile-icon" data-icon="plug"></span><h3>Құрылғыны қосыңыз</h3><p>Құрылғыны желіге қосып, басқару панеліне тіркеңіз.</p></article>
 <article class="card reveal"><span class="tile-icon" data-icon="home"></span><h3>Бөлмеге бекітіңіз</h3><p>Құрылғыға атау беріп, оны тиісті бөлмеге орналастырыңыз.</p></article>
 <article class="card reveal"><span class="tile-icon" data-icon="spark"></span><h3>Басқара бастаңыз</h3><p>Құрылғыларды жеке басқарыңыз немесе сценарий арқылы бірге іске қосыңыз.</p></article></div>

@@ -1015,3 +1015,663 @@ footer{padding-bottom:78px}
   color: #fff2df;
   background: #3d2c1e;
 }
+
+/* === UI Polish: Clean Spacing, Zero Cramped/Clipped Text, Scannable Hierarchy === */
+main { padding-bottom: 48px; }
+section.block { padding: 64px 0; }
+.section-head { margin: 0 auto 28px; }
+.section-head:after { margin-top: 18px; }
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.dash-head { margin-bottom: 4px; }
+.tabs, .scenes {
+  margin: 0;
+  gap: 8px;
+}
+.tabs button, .scenes button {
+  padding: 9px 14px;
+  font-size: .88rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.scene-status {
+  margin: -6px 0 0;
+  min-height: 0;
+  font-size: .86rem;
+}
+.scene-status:empty { display: none; }
+
+.room-stage {
+  min-height: 365px;
+  margin: 4px 0 14px;
+  padding: 18px 20px;
+}
+.room-fx-badges {
+  top: 14px;
+  left: 16px;
+  right: 16px;
+  gap: 7px;
+}
+.fx-pill {
+  padding: 5px 11px;
+  font-size: .78rem;
+  white-space: nowrap;
+}
+.room-toast {
+  top: auto;
+  bottom: 72px;
+  right: 16px;
+  max-width: calc(100% - 32px);
+}
+.room-caption {
+  align-items: center;
+  gap: 12px 16px;
+}
+.room-caption h3 {
+  font-size: clamp(1.45rem, 2.6vw, 1.85rem);
+  line-height: 1.15;
+}
+.room-hotspots {
+  gap: 7px;
+}
+.room-hotspots button {
+  padding: 7px 11px;
+  font-size: .82rem;
+  white-space: nowrap;
+}
+
+.metrics {
+  margin: 0 0 14px;
+  gap: 12px;
+}
+.metric {
+  padding: 14px 16px;
+}
+.metric span {
+  font-size: .82rem;
+  margin-bottom: 2px;
+}
+
+.dash-grid {
+  gap: 16px;
+}
+.devices {
+  gap: 12px;
+}
+.device {
+  padding: 15px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.device h3 {
+  font-size: .98rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.state {
+  margin: 0;
+  font-size: .83rem;
+}
+.dev-viz {
+  margin-top: 2px;
+  height: 30px;
+  padding: 0 10px;
+}
+.viz-label {
+  font-size: .76rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+.control {
+  gap: 9px;
+  font-size: .83rem;
+}
+.control span, .control output {
+  white-space: nowrap;
+  flex: none;
+}
+.control output {
+  min-width: 36px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.tv-channel-bar {
+  margin-top: 4px;
+  gap: 8px;
+}
+.tv-ch-name {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: .84rem;
+}
+.curtain-presets {
+  gap: 6px;
+  margin-top: 4px;
+}
+.curtain-presets button {
+  min-height: 29px;
+  padding: 3px 8px;
+  font-size: .76rem;
+  white-space: nowrap;
+}
+
+/* Smart Modules & IoT Monitor spacing */
+.smart-modules {
+  gap: 14px;
+  margin: 6px 0;
+}
+.module-card {
+  padding: 18px 20px;
+  gap: 12px;
+}
+.module-head h3 {
+  font-size: 1.05rem;
+}
+.inline-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.inline-label select {
+  width: auto;
+  min-width: 96px;
+  padding: 7px 10px;
+}
+.module-controls {
+  gap: 9px;
+}
+.module-controls input[type="time"] {
+  flex: 0 0 auto;
+  width: 112px;
+  padding: 7px 9px;
+}
+.module-controls select {
+  padding: 7px 10px;
+  min-width: 128px;
+}
+.schedule-item {
+  padding: 9px 12px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.schedule-item > div:first-child {
+  min-width: 0;
+  flex: 1 1 160px;
+}
+.safety-grid {
+  gap: 12px;
+}
+.safety-sensor {
+  padding: 13px 14px;
+}
+.safety-sensor-top small {
+  color: var(--muted);
+  font-weight: 500;
+  font-size: .78rem;
+}
+.safety-sensor strong {
+  font-size: 1.12rem;
+}
+
+.iot {
+  margin: 6px 0 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.iot h3 { margin: 0; }
+.iot p { margin: 0; }
+.sensor-grid {
+  margin: 4px 0 10px;
+  gap: 12px;
+}
+.iot-actions {
+  margin: 4px 0;
+  gap: 9px;
+}
+.iot-actions .btn {
+  min-height: 40px;
+  padding: 8px 15px;
+  font-size: .88rem;
+  white-space: nowrap;
+}
+.iot .btn .ico {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  display: inline-block;
+}
+#iot-cloud-status, #iot-storage, #iot-pdf-status {
+  font-size: .84rem;
+  color: var(--muted);
+}
+#iot-alert {
+  margin: 2px 0;
+  font-size: .9rem;
+  font-weight: 600;
+}
+
+/* Keep floating chat launcher compact & out of the way */
+#chat-launch {
+  padding: 10px 15px;
+  font-size: .88rem;
+}
+@media (max-width: 720px) {
+  .room-stage { min-height: 310px; padding: 14px; }
+  .room-toast { bottom: 110px; }
+  .tabs button, .scenes button { padding: 8px 11px; font-size: .83rem; }
+}
+
+/* === Apple Home / Stripe-Grade UX: Unified Toolbar & Segmented Dashboard Views === */
+.dash-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  flex-wrap: wrap;
+}
+.dash-segments {
+  display: flex;
+  gap: 6px;
+  padding: 5px;
+  border-radius: 14px;
+  background: #17120d;
+  border: 1px solid #3f3327;
+  margin: 0 0 14px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.dash-segments button {
+  flex: 1 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 40px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font-size: .88rem;
+  font-weight: 620;
+  white-space: nowrap;
+  transition: background-color .2s, color .2s, border-color .2s;
+}
+.dash-segments button .ico {
+  width: 17px;
+  height: 17px;
+}
+.dash-segments button:hover {
+  color: var(--text);
+  background: #282018;
+}
+.dash-segments button[aria-selected="true"] {
+  background: linear-gradient(155deg, #523822, #312116);
+  border-color: #bd905d;
+  color: #fff3df;
+  box-shadow: 0 4px 14px #00000044;
+}
+.dash-pane {
+  animation: view-in .22s ease both;
+}
+.dash-pane[hidden] {
+  display: none !important;
+}
+
+/* === Premium Studio Design System: Unified Header, Glass HUD, Apple Switches & Light Mode === */
+header {
+  backdrop-filter: blur(22px);
+}
+.nav {
+  height: 64px;
+  gap: 16px;
+}
+.navlinks {
+  gap: 18px;
+  font-size: .88rem;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.navlinks a {
+  white-space: nowrap;
+  padding: 6px 10px;
+  border-radius: 9px;
+  transition: background-color .18s, color .18s;
+}
+.navlinks a[aria-current="page"] {
+  color: var(--text);
+  background: #3d2d1f;
+}
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+.theme-btn {
+  min-height: 40px;
+  width: 40px;
+  padding: 0;
+  border-radius: 11px;
+  font-size: 1.05rem;
+}
+.nav .primary {
+  min-height: 40px;
+  padding: 8px 15px;
+  font-size: .88rem;
+}
+@media (max-width: 960px) {
+  .nav-actions .primary { display: none; }
+  .menu { display: inline-flex; min-height: 40px; padding: 8px 13px; }
+  .navlinks {
+    display: none;
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    padding: 14px 18px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+  .navlinks.open { display: flex; }
+}
+
+/* Fullscreen Studio Demo */
+section.demo-studio {
+  padding: 20px 0 56px;
+}
+.dashboard {
+  padding: clamp(16px, 2.4vw, 26px);
+  border-radius: 26px;
+}
+.room-stage {
+  min-height: 410px;
+  border-radius: 22px;
+  margin: 2px 0 14px;
+}
+.room-top-bar {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  right: 16px;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  pointer-events: none;
+}
+.room-top-bar .room-fx-badges {
+  position: static;
+}
+.room-metrics-hud {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 7px 14px;
+  border-radius: 14px;
+  background: #14100cd6;
+  border: 1px solid #d4b08244;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 6px 20px #00000045;
+}
+.hud-item {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+.hud-item + .hud-item {
+  padding-left: 14px;
+  border-left: 1px solid #ffffff1c;
+}
+.hud-item span {
+  font-size: .68rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: #cbbba6;
+}
+.hud-item strong {
+  font-size: .96rem;
+  font-weight: 750;
+  color: #fff4e3;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Clean Minimalist Apple Home Switches (replaces busy photo thumb) */
+.toggle, #iot-monitor #iot-auto {
+  --thumb-size: 24px;
+  --travel: 22px;
+  width: 52px;
+  height: 30px;
+  padding: 2px 3px;
+  border-radius: 99px;
+  background: #3b342c;
+  border: 1px solid #5d5144;
+  box-shadow: inset 0 1px 3px #00000055;
+}
+.toggle::before, #iot-monitor #iot-auto::before {
+  width: var(--thumb-size);
+  height: var(--thumb-size);
+  border: 0;
+  background: #fffaf3;
+  filter: none;
+  box-shadow: 0 2px 6px #00000055;
+}
+.toggle[aria-checked="true"], #iot-monitor #iot-auto:checked {
+  background: linear-gradient(135deg, #d89b52, #b37432);
+  border-color: #f3c485;
+  box-shadow: inset 0 1px 2px #00000022, 0 0 12px #e5af5833;
+}
+.toggle[aria-checked="true"]::before, #iot-monitor #iot-auto:checked::before {
+  transform: translateX(var(--travel));
+  background: #ffffff;
+  filter: none;
+  box-shadow: 0 2px 8px #00000044;
+}
+
+/* Restrained, calm button-trace: only animate on primary CTAs or hover/focus */
+[data-button-trace]::after {
+  opacity: 0;
+  transition: opacity .22s ease;
+}
+[data-button-trace]:is(:hover, :focus-visible)::after {
+  opacity: .85;
+}
+.primary[data-button-trace]::after {
+  opacity: .55;
+}
+
+/* === Warm Daylight Theme ([data-theme="light"]) === */
+html[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f6f1eb;
+  --panel: #ffffff;
+  --line: #e2d6c8;
+  --text: #221a14;
+  --muted: #6c5c4e;
+  --blue: #a46427;
+  --violet: #7f5733;
+  --green: #2c7a52;
+  --button: #b56f2a;
+}
+html[data-theme="light"] body {
+  background: var(--bg);
+  color: var(--text);
+}
+html[data-theme="light"] header {
+  background: #fdfbf8eb;
+  border-color: var(--line);
+}
+html[data-theme="light"] .brand i {
+  background: #f3e6d6;
+  border-color: #dec7ab;
+  color: #8f531b;
+}
+html[data-theme="light"] .navlinks a[aria-current="page"] {
+  background: #efe3d4;
+  color: #221a14;
+}
+html[data-theme="light"] main {
+  background: radial-gradient(ellipse at 50% 0%, #eadac7 0%, transparent 62%);
+}
+html[data-theme="light"] #demo {
+  background: none;
+}
+html[data-theme="light"] .card,
+html[data-theme="light"] .dashboard,
+html[data-theme="light"] .device,
+html[data-theme="light"] .module-card,
+html[data-theme="light"] .iot,
+html[data-theme="light"] .chart,
+html[data-theme="light"] .stats,
+html[data-theme="light"] details {
+  background: #ffffff;
+  border-color: var(--line);
+  box-shadow: 0 6px 24px #45311c0d;
+}
+html[data-theme="light"] .device.active {
+  background: linear-gradient(155deg, #fffaf3, #fff);
+  border-color: #c99252;
+  box-shadow: 0 8px 24px #a4642718;
+}
+html[data-theme="light"] .btn,
+html[data-theme="light"] [data-button-trace] {
+  --control-fill: #f6efe7;
+  --control-edge: #d8c7b4;
+  --trace-color: #b56f2a;
+  background: #f6efe7;
+  border-color: #d8c7b4;
+  color: #2b2119;
+}
+html[data-theme="light"] .btn:hover,
+html[data-theme="light"] [data-button-trace]:hover {
+  background: #ede1d2;
+  border-color: #b56f2a;
+  color: #1a130e;
+}
+html[data-theme="light"] .primary,
+html[data-theme="light"] .primary[data-button-trace],
+html[data-theme="light"] #chat-launch[data-button-trace] {
+  background: linear-gradient(135deg, #b9742f, #8f531b);
+  border-color: #9e5f22;
+  color: #ffffff;
+}
+html[data-theme="light"] .tabs button,
+html[data-theme="light"] .scenes button,
+html[data-theme="light"] .temp button,
+html[data-theme="light"] .curtain-presets button,
+html[data-theme="light"] .tv-channel-bar button {
+  background: #f5eee6;
+  border-color: #ddd0c0;
+  color: #554639;
+}
+html[data-theme="light"] .tabs [aria-selected="true"],
+html[data-theme="light"] .scenes [aria-pressed="true"],
+html[data-theme="light"] .curtain-presets button.is-active {
+  background: #2c2118;
+  border-color: #2c2118;
+  color: #fff6ea;
+}
+html[data-theme="light"] .dash-segments {
+  background: #efe7dd;
+  border-color: #ddd0c0;
+}
+html[data-theme="light"] .dash-segments button[aria-selected="true"] {
+  background: #ffffff;
+  border-color: #d6c3ad;
+  color: #221a14;
+  box-shadow: 0 3px 10px #3a271516;
+}
+html[data-theme="light"] .dev-viz,
+html[data-theme="light"] .safety-sensor,
+html[data-theme="light"] .schedule-item,
+html[data-theme="light"] .cloud-settings,
+html[data-theme="light"] .clock-display,
+html[data-theme="light"] .floor {
+  background: #f8f3ec;
+  border-color: #e0d3c3;
+  color: var(--text);
+}
+html[data-theme="light"] .viz-label { color: #5b4c3f; }
+html[data-theme="light"] .device.active .viz-label { color: #ffffff; }
+html[data-theme="light"] .clock-display { color: #8f531b; }
+html[data-theme="light"] .safety-sensor strong { color: #2a2018; }
+html[data-theme="light"] .safety-sensor.danger { background: #fff0ef; border-color: #e54840; }
+html[data-theme="light"] .safety-sensor.danger strong { color: #b82920; }
+html[data-theme="light"] input:not([type=range]),
+html[data-theme="light"] textarea,
+html[data-theme="light"] select {
+  background: #ffffff;
+  border-color: #d4c4b2;
+  color: #221a14;
+}
+html[data-theme="light"] .live-badge {
+  background: #f4ebe0;
+  border-color: #d8c5b0;
+  color: #6b533c;
+}
+html[data-theme="light"] .live-badge[data-active="true"] {
+  background: #e3f7ec;
+  border-color: #5eb888;
+  color: #1b5c3b;
+}
+html[data-theme="light"] .toggle,
+html[data-theme="light"] #iot-monitor #iot-auto {
+  background: #d9cdc0;
+  border-color: #c5b6a6;
+}
+html[data-theme="light"] #chat-panel {
+  background: #fffffffa;
+  color: #221a14;
+  border-color: #d8c7b4;
+}
+html[data-theme="light"] .chat-head {
+  background: #f5ede3;
+  border-color: #e2d5c6;
+}
+html[data-theme="light"] .chat-head p { color: #6c5c4e; }
+html[data-theme="light"] .chat-message { background: #f3ece3; color: #221a14; }
+html[data-theme="light"] .chat-message.user { background: #2c2118; color: #fff6ea; }
+html[data-theme="light"] .room-caption h3 { color: #ffffff; }
+html[data-theme="light"] .room-hotspots button {
+  background: #1c150fe0;
+  color: #fff4e2;
+  border-color: #dbc4a366;
+}
+html[data-theme="light"] .hero-link:first-child {
+  background: #2c2118;
+  color: #fff5e8;
+}
+html[data-theme="light"] .hero-link {
+  background: #ffffffeb;
+  color: #221a14;
+  border-color: #ddd0c0;
+}
+html[data-theme="light"] .contact {
+  background: linear-gradient(150deg, #fffaf3, #f3e8da);
+}
+@media (max-width: 720px) {
+  .room-stage { min-height: 330px; }
+  .room-metrics-hud { gap: 10px; padding: 6px 10px; }
+  .hud-item + .hud-item { padding-left: 10px; }
+}
